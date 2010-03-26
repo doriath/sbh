@@ -12,7 +12,7 @@ or microarrays with thousands to billions of synthetic oligonucleotides found
 in a genome of interest plus many known variations or even all possible
 single-base variations.
 
-Problem variants
+== Problem variants
 * with negative errors
 * with positives errors
 * with positive and negative errors
