@@ -1,9 +1,18 @@
-:title: SBH Heuristics
+= SBH Heuristics
 
-:section: SBH
-Sequencing by Hybridization is a class of methods for determining the order in which nucleotides occur on a strand of DNA. Typically used for looking for small changes relative to a known DNA sequence. The binding of one strand of DNA to its complementary strand in the DNA double-helix (aka hybridization) is sensitive to even single-base mismatches when the hybrid region is short or is specialized mismatch detection proteins are present. This is exploited in a variety of ways, most notable via DNA chips or microarrays with thousands to billions of synthetic oligonucleotides found in a genome of interest plus many known variations or even all possible single-base variations.
+== Problem definition
+Sequencing by Hybridization is a class of methods for determining the 
+order in which nucleotides occur on a strand of DNA. Typically used for 
+looking for small changes relative to a known DNA sequence. The binding 
+of one strand of DNA to its complementary strand in the DNA double-helix 
+(aka hybridization) is sensitive to even single-base mismatches when the 
+hybrid region is short or is specialized mismatch detection proteins are 
+present. This is exploited in a variety of ways, most notable via DNA chips
+or microarrays with thousands to billions of synthetic oligonucleotides found
+in a genome of interest plus many known variations or even all possible
+single-base variations.
 
-:section: Problem variants
+Problem variants
 * with negative errors
 * with positives errors
 * with positive and negative errors
