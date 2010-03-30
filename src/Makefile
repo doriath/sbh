@@ -5,7 +5,7 @@ BINDIR=../bin/
 all: $(TARGETS)
 
 clean:
-	$(RM) *.o $(TARGETS)
+	$(RM) $(BINDIR)*
 
 brute-force: brute-force.cpp
 	$(CXX) $(CXXFLAGS) $? $(LDFLAGS) -o $(BINDIR)$@
