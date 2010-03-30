@@ -1,0 +1,31 @@
+#!/usr/bin/ruby
+
+require 'net/http'
+require 'uri'
+require 'ftools'
+
+url = URI.parse('http://www.cs.put.poznan.pl/mkasprzak/bio/testy.html')
+res = Net::HTTP.start(url.host, url.port) do |http|
+  http.get(url.path)
+end
+
+File.makedirs("instances/positive")
+File.makedirs("instances/negative")
+
+res.body.scan(/a href="([^"]+)"/) do |link|
+  link = link[0]
+  filename = link.split('/')[1]
+  n = filename[/\.(\d+)[\+-]/, 1]
+  errors = filename[/\.\d+([\+-])/, 1] == "+" ? :positive : :negative
+
+  break if n.nil?
+
+  data = Net::HTTP.start(url.host, url.port) { |http| http.get("/mkasprzak/bio/" + link) }
+
+  path = 'instances/' + errors.to_s + '/' + filename
+  File.open(path, 'w') do |f| 
+    f.write(n)
+    f.write("\n")
+    f.write(data.body)
+  end
+end
