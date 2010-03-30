@@ -1,5 +1,5 @@
-CXXFLAGS=-O2 -g -Wall
-TARGETS=brute-force
+CXXFLAGS=-g -Wall
+TARGETS=$(BINDIR)sbh_lib.o $(BINDIR)sbh_general
 BINDIR=../bin/
 
 all: $(TARGETS)
@@ -7,5 +7,8 @@ all: $(TARGETS)
 clean:
 	$(RM) $(BINDIR)*
 
-brute-force: brute-force.cpp
-	$(CXX) $(CXXFLAGS) $? $(LDFLAGS) -o $(BINDIR)$@
+$(BINDIR)sbh_lib.o: sbh_lib.cpp
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -c $< -o $@
+
+$(BINDIR)sbh_general: sbh_general.cpp $(BINDIR)sbh_lib.o
+	$(CXX) $(CXXFLAGS) $? $(LDFLAGS) -o $@
