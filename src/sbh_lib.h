@@ -7,16 +7,27 @@
 #include <algorithm>
 using namespace std;
 
+/**
+ * Represents oligonucleotide
+ */
+class Olig{
+    public:
+        string sequence;
+        Olig(string sequence);
+        int distance(Olig &olig);
+};
+
+/**
+ * Represents instance of SBH problem.
+ * It contains the sequence length and oligonucleotides.
+ */
 class Instance{
     public:
         int n;
-        int **adjacency_matrix;
+        vector<Olig> oligs;
         void read_file(string file_path);
-        ~Instance();
-
     private:
-        void calculate_adjacency_matrix(vector<string> oligonucleotides);
-        int oligonucleotide_distance(string first, string second);
 };
+
 
 #endif
