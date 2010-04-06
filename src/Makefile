@@ -1,5 +1,5 @@
-CXXFLAGS=-g -Wall
-TARGETS=$(BINDIR)sbh_lib.o $(BINDIR)sbh_general $(BINDIR)sbh_positive $(BINDIR)sbh_check
+CXXFLAGS=-g -Wall -O2
+TARGETS=$(BINDIR)sbh_lib.o $(BINDIR)sbh_general $(BINDIR)sbh_positive $(BINDIR)sbh_negative $(BINDIR)sbh_check
 BINDIR=../bin/
 
 all: clean $(TARGETS)
@@ -14,6 +14,9 @@ $(BINDIR)sbh_general: sbh_general.cpp $(BINDIR)sbh_lib.o
 	$(CXX) $(CXXFLAGS) $? $(LDFLAGS) -o $@
 
 $(BINDIR)sbh_positive: sbh_positive.cpp $(BINDIR)sbh_lib.o
+	$(CXX) $(CXXFLAGS) $? $(LDFLAGS) -o $@
+
+$(BINDIR)sbh_negative: sbh_negative.cpp $(BINDIR)sbh_lib.o
 	$(CXX) $(CXXFLAGS) $? $(LDFLAGS) -o $@
 
 $(BINDIR)sbh_check: sbh_check.cpp $(BINDIR)sbh_lib.o

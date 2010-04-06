@@ -33,29 +33,3 @@ int Olig::distance(Olig &olig){
     }
     return sequence.size();
 }
-
-/*
-This function uses only one loop and is little bit faster in most case scenario.
-To be honest - on words with length == 10 the difference is unnoticeable...
-Tested on different scenarios and it should work correct.
-*/
-/*
-int Olig::distance(Olig &olig){
-	int current = 1;
-	int distance = 1;
-    for (int i = 1; i < int(sequence.size()); i++)
-	{
-		if (sequence[i] != olig.sequence[i-distance])
-		{
-			distance += current;
-			if (sequence[i] == olig.sequence[i-distance+1])
-			{
-				distance--;
-			}
-			current = 1;
-		}
-		else current++;
-    }
-    return distance;
-}
-*/
