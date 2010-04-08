@@ -23,8 +23,27 @@
 
 \newpage
 
+\section{Wprowadzenie do zagadnienia}
+
+Problem sekwencjonowania łańcuchów DNA jest w ogólności problemem silnie NP-trudnym. W problemie tym mamy dany zbiór {\bf S} słów (oligonukleotydów) o jednakowej długości {\bf l} nad alfabetem {\bf \{A, C, G, T\}}. Ponadto mamy podaną długość sekwencji oryginalnej {\bf n}. Celem sekwencjonowania jest odtworzenie oryginalnego łańcucha DNA, który został poddany hybrydyzacji, na podstawie powyżej zdefiniowanych danych wejściowych.
+Dla ułatwienia dalszego opisu wprowadźmy kilka terminów: odległość między oligonukleotydami.
+//TODO więcej terminów?
+Odległość między oligonukleotydami definiuje się między każdą parą słów jako najmniejsze przesunięcie jednego oligonukletydu względem drugiego, które umożliwi połączenie ich w jeden łańcuch. Dla przykładu słowo $ACGTA$ znajduje się w odległości 2 względem słowa $ACACG$ (relacja w drugą stronę - słowo $ACACG$ znajduje się w odległości 4 względem słowa $ACGTA$).
+W zaproponowanych przez nas podejściach będziemy wykorzystywać teorię grafów w celu szybkiego łączenia oligonukleotydów oddalonych od siebie o jak najmniejszą wartość.
+
+W analizie problemu można wyróżnić cztery szczególne przypadki - idealny, z błędami negatywnymi, z błędami pozytywnymi, z obydwoma typami błędów.
+Przypadek idealny to taki, gdzie na mikromacierzy dopasowały się wszystkie słowa występujące w sekwencji.
+Mówimy, że dane odwzorowanie łańcucha DNA na mikromacierzy zawiera błędy negatywne, jeśli z jakiegoś powodu niektóre słowa nie zostały dopasowane do macierzy. Otrzymujemy więc niepełne spektrum sekwencji.
+Błędami pozytywnymi określamy nadmiar informacji, tzn. na mikromacierzy zostały dopasowane słowa, które nie występują w sekwencji oryginalnej. Mamy więc zbiór słów które są nadzbiorem zbioru słów wchodzących w skład oryginalnej sekwencji.
 
 \section{SBH with positive errors}
+Jak już wcześniej mówiliśmy, sekwencjonowanie łańcucha DNA z błędami pozytywnymi charakteryzuje się nadmiarową ilością słów otrzymanych w spektrum. Mamy więc pewność, że pośród tych słów znajdzie się dokładnie $n-l+1$ z których będziemy mogli zrekonstruować oryginalną sekwencję.
+W tym celu proponujemy następujący algorytm:
+1. Utwórz graf skierowany {\bf G}. Niech zbiór wierzchołków V stanowią słowa tworzące spektrum sekwencji DNA. Dla każdej pary wierzchołków $(i,j)$ dodaj łuk od wierzchołka $i$ do $j$ wtw (wtw = wtedy i tylko wtedy, nie wiem czy to skrót powszechny) gdy słowo w wierzchołku $j$ jest oddalone o 1 od słowa w wierzchołku $i$
+2. Znajdź silnie spójną składową grafu {\bf SCC}
+3. Uszereguj topologicznie {\bf SCC}
+4. Dla każdego wierzchołka znajdź ścieżkę przechodzącą przez n-l+1 wierzchołków
+5. Wybierz ścieżkę optymalną ścieżkę (//TODO jak to się dzieje?) 
 
 \section{Wyniki}
 
