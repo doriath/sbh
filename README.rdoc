@@ -16,3 +16,8 @@ single-base variations.
 * with negative errors
 * with positives errors
 * with positive and negative errors
+
+
+== Rake tasks
+* rake compile - compiles sources
+* rake positive - run sbh_positive solution for all instances
