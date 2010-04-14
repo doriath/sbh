@@ -11,7 +11,7 @@ using namespace std;
 int main(int argc, char **argv){
     if(argc != 3){
         printf("%s <instance_file> <result_file>\n", argv[0]);
-        return 0;
+        return 1;
     }
     Instance instance;
     instance.read_file(argv[1]);
@@ -33,4 +33,6 @@ int main(int argc, char **argv){
             count++;
     }
     printf("%d\n", count);
+
+    return 0;
 }
