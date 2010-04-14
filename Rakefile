@@ -28,8 +28,8 @@ task :compile => TARGETS
 desc "Run sbh positive for all input files"
 task :positive do
   instances_dir = "instances/positive/"
-  printf("%-6s | %-6s | %-6s | \n", "N", "Result", "Error")
-  print "--------------------------\n";
+  printf("%-10s | %-6s | %-6s | %-6s | \n", "File", "N", "Result", "Error")
+  print "---------------------------------------\n";
 
   Dir.foreach(instances_dir) do |file|
     instance_path = File.join(instances_dir, file);
@@ -39,7 +39,7 @@ task :positive do
     result = `bin/sbh_check #{instance_path} out`
 
     n = file[/\.(\d+)[\+-]/, 1]
-    printf("%-6d | %-6d | %-6d |\n", n, result, n.to_i - result.to_i)
+    printf("%-10s | %-6d | %-6d | %-6d |\n", file, n, result, n.to_i - result.to_i)
   end
   File.delete("out")
 end
