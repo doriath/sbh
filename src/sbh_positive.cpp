@@ -19,6 +19,10 @@ adjacency_list transpose(adjacency_list &);
 vector<int> topological_sort(adjacency_list &);
 void print_graph_in_dot_format(adjacency_list &);
 void print_solution(Instance &instance, vector<int> &solution);
+bool remove_edge(adjacency_list &V);
+vector<int> calc(adjacency_list &V);
+vector<int> simple_calc(adjacency_list &V);
+
 
 int main(int argc, char **argv){
     Instance instance;
@@ -27,7 +31,13 @@ int main(int argc, char **argv){
     adjacency_matrix adjacency_matrix = create_adjacency_matrix(instance);
     adjacency_list V = create_adjacency_list(adjacency_matrix);
 
-    
+    vector<int> solution = calc(V);
+    print_solution(instance, solution);
+
+    return 0;
+}
+
+vector<int> simple_calc(adjacency_list &V){
     vector<int> sorted = topological_sort(V);
     vector<int> distance(sorted.size(), -1);
 
@@ -50,9 +60,15 @@ int main(int argc, char **argv){
         u = v;
         solution.push_back(u);
     }
-    print_solution(instance, solution);
+    return solution;
+}
 
-/*
+vector<int> calc(adjacency_list &V){
+    while(remove_edge(V));
+    return simple_calc(V);
+}
+
+bool remove_edge(adjacency_list &V){
     vector<vector<int> > scc = strongly_connected_components(V);
     
     vector<int> scc_number(V.size());
@@ -69,37 +85,36 @@ int main(int argc, char **argv){
     vector<int> sorted = topological_sort(SCC);
     vector<int> distance(V.size(), 0);
     vector<int> used(V.size(), 0);
-    vector<int> next;
     vector<vector<int> > best(V.size());
     for(int i = 0; i < int(sorted.size()); i++){
-        int u = sorted[i];
-        for(int j = 0; j < int(scc[u].size()); j++){
-            int v = scc[u][j];
-            next.assign(V.size(), -1);
-            distance[v] = calculate(v, V, scc_number, distance, used, next);
-            best[v] = next;
+        int s = sorted[i];
+        for(int k = 0; k < int(scc[s].size()); k++){
+            int u = scc[s][k];
+            distance[u] = 0;
+            for(int j = 0; j < int(V[u].size()); j++){
+                int v = V[u][j];
+                if(scc_number[v] != scc_number[u])
+                    distance[u] = max(distance[u], distance[v] + 1);
+            }
+        }
+        if(scc[s].size() > 1){
+            int max_i = scc[s][0];
+            for(int k = 0; k < int(scc[s].size()); k++){
+                int u = scc[s][k];
+                if(distance[u] > distance[max_i])
+                    max_i = u;
+            }
+            vector<int> tmp;
+            for(int j = 0; j < int(V[max_i].size()); j++)
+                if(scc_number[ V[max_i][j] ] != scc_number[max_i])
+                    tmp.push_back(V[max_i][j]);
+            
+            V[max_i] = tmp;
+
+            return true;
         }
     }
-
-    int max_i = 0;
-    for(int i = 0; i < int(distance.size()); i++){
-        if(distance[i] > distance[max_i])
-            max_i = i;
-    }
-
-    vector<int> solution;
-    int u = max_i;
-    int x = u;
-    solution.push_back(u);
-    while(best[x][u] != -1){
-        if(scc_number[u] != scc_number[best[x][u]]){
-            u = best[x][u];
-            x = u;
-        }else
-            u = best[x][u];
-        solution.push_back(u);
-    }
-    */
+    return false;
 }
 
 void print_solution(Instance &instance, vector<int> &solution){

@@ -26,7 +26,7 @@ task :compile => TARGETS
 
 
 desc "Run sbh positive for all input files"
-task :positive do
+task :positive => "bin/sbh_positive" do
   instances_dir = "instances/positive/"
   printf("%-10s | %-6s | %-6s | %-6s | \n", "File", "N", "Result", "Error")
   print "---------------------------------------\n";
