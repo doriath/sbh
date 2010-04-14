@@ -2,7 +2,7 @@ CXXFLAGS=-g -Wall -O2
 TARGETS=$(BINDIR)sbh_lib.o $(BINDIR)sbh_general $(BINDIR)sbh_positive $(BINDIR)sbh_negative $(BINDIR)sbh_check
 BINDIR=../bin/
 
-all: clean $(TARGETS)
+all: $(TARGETS)
 
 clean:
 	$(RM) $(BINDIR)*
