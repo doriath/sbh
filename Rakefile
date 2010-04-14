@@ -13,8 +13,8 @@ end
 
 TARGETS.each do |target|
   src_file = File.join('src', File.basename(target).ext('cpp'))
-  file target => ['bin/sbh_lib.o', src_file] do |t|
-    sh "g++ -o #{t.name} #{src_file} bin/sbh_lib.o"
+  file target => ['bin/sbh_lib.o', 'bin/graph.o', src_file] do |t|
+    sh "g++ -o #{t.name} #{src_file} bin/sbh_lib.o bin/graph.o"
   end
 end
 

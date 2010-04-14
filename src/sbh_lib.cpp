@@ -15,6 +15,17 @@ Olig::Olig(string sequence){
     this->sequence = sequence;
 }
 
+void Instance::print_solution(vector<int> &solution){
+    for(int i = 0; i < int(solution.size()); i++){
+        string &o = oligs[solution[i]].sequence;
+        if(i == 0)
+            printf("%s", o.c_str());
+        else
+            printf("%c", o[o.size()-1]);
+    }
+    printf("\n");
+}
+
 /*
 This one is invalid when used on words with different lengths (gives unproper results).
 We can omit this behaviour, because our words have the same length. :)
