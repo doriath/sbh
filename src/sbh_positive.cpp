@@ -14,7 +14,7 @@ vector<int> calc(adjacency_list &V);
 vector<int> simple_calc(adjacency_list &V);
 
 int main(int argc, char **argv){
-    if(argc != 1){
+    if(argc != 2){
         printf("%s <instance_file>\n", argv[0]);
         return 1;
     }

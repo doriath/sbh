@@ -1,7 +1,7 @@
 require 'rake/clean'
 
 CLEAN.include('bin/*')
-TARGETS = %w{bin/sbh_positive bin/sbh_negative bin/sbh_check}
+TARGETS = %w{bin/sbh_positive bin/sbh_negative bin/sbh_check bin/sbh_print_graph}
 SRC = FileList['src/*.cpp']
 
 FileList['src/*.cpp'].each do |src_file|
