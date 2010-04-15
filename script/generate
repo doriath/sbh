@@ -1,0 +1,93 @@
+#!/usr/bin/ruby
+
+def usage
+  puts "script/generate positive <n> <errors>"
+  puts "script/generate negative <n> <errors>"
+  exit
+end
+
+usage if ARGV.length != 3
+type = ARGV[0].to_sym
+usage if type != :negative && type != :positive
+n = ARGV[1].to_i
+errors = ARGV[2].to_i
+
+class Generator
+  def initialize type, n, errors, len = 10
+    @type = type
+    @n = n
+    @errors = errors
+    @len = len
+  end
+
+  def generate
+    case @type
+    when :positive then generate_positive
+    when :negative then generate_negative
+    end
+  end
+
+  private
+
+  def generate_positive
+    dna = generate_dna
+    oligs = []
+    @n.times do |i|
+      oligs << dna[i, @len]
+    end
+
+    @errors.times do
+      while
+        b = random_olig
+        unless oligs.include? b
+          oligs << b
+          break
+        end
+      end
+    end
+
+    oligs.sort_by { rand }
+  end
+
+  def generate_negative
+    throw "Not implemented"
+  end
+
+  def generate_dna
+    array = ['A', 'C', 'T', 'G']
+    result = (0...@len).map { array[rand(4)] }.join
+
+    used = Hash.new(0)
+    used[result] = true
+    (@n-1).times do |index|
+      available = array.select do |a|
+        !used.has_key? result[index + 1, @len - 1] + a
+      end
+
+      throw "Cannot generate next letter" if available.empty?
+
+      result += available[rand(available.length)]
+      
+      used[result[-@len, @len]] = true
+    end
+
+    throw "Some negative errors appear in sequence" if used.size != @n
+
+    result
+  end
+
+  def random_olig
+    array = ['A', 'C', 'T', 'G']
+    (0...@len).map { array[rand(4)] }.join
+  end
+
+end
+
+generator = Generator.new type, n, errors
+
+srand
+puts n
+generator.generate.each do |olig|
+  puts olig
+end
+
