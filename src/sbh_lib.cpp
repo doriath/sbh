@@ -26,20 +26,18 @@ void Instance::print_solution(vector<int> &solution){
     printf("\n");
 }
 
-/*
-This one is invalid when used on words with different lengths (gives unproper results).
-We can omit this behaviour, because our words have the same length. :)
-*/
 int Olig::distance(Olig &olig){
     for (int i = 1; i < int(sequence.size()); i++) {
         bool ok = true;
-        for(int j = i; j < int(olig.sequence.size()); j++) {
+		int count = 0;
+        for(int j = i; j < int(sequence.size()); j++) {
             if(sequence[j] != olig.sequence[j - i]){
                 ok = false;
                 break;
             }
+			count++;
         }
-        if(ok)
+		if(ok && count != olig.sequence.size())
             return i;
     }
     return sequence.size();
