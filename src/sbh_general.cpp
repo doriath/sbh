@@ -32,7 +32,14 @@ int main(int argc, char **argv){
 		vector<int> solution = calc(V);
 		result = instance.get_solution(solution);
 		instance.remove_solution_nodes(solution);
-		instance.oligs.push_back(result);
+		if (result.length() >= instance.n)
+		{
+			result = result.substr(0, instance.n);
+			instance.oligs.insert(instance.oligs.begin(), result);
+			break;
+		}
+		else
+			instance.oligs.insert(instance.oligs.begin(), result);
 	}
 	vector<int> sol(1,0);
 	instance.print_solution(sol);

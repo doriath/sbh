@@ -28,8 +28,8 @@ task :compile => TARGETS
 desc "Run sbh positive for all input files"
 task :positive => "bin/sbh_positive" do
   instances_dir = "instances/positive/"
-  printf("%-10s | %-6s | %-6s | %-6s | \n", "File", "N", "Result", "Error")
-  print "---------------------------------------\n";
+  printf("%-10s | %-7s| %-7s| %-7s| %-7s| %-7s| %-7s| %-7s| \n", "File", "Words", "N", "Length", "Used w", "Made w", "Repeats", "Error")
+  print "---------------------------------------------------------------------------\n";
 
   Dir.foreach(instances_dir) do |file|
     instance_path = File.join(instances_dir, file);
@@ -38,8 +38,10 @@ task :positive => "bin/sbh_positive" do
     `bin/sbh_positive #{instance_path} > out`
     result = `bin/sbh_check #{instance_path} out`
 
-    n = file[/\.(\d+)[\+-]/, 1]
-    printf("%-10s | %-6d | %-6d | %-6d |\n", file, n, result, n.to_i - result.to_i)
+    n = file[/\.(\d+)/, 1].to_i
+	given_n = n + file[/\+(\d+)/, 1].to_i
+	res = result.split(" ")
+    printf("%-10s | %-7d| %-7d| %-7d| %-7d| %-7d| %-7d| %-7d|\n", file, given_n, n, res[0], res[1], res[2], res[3], n - res[1].to_i)
   end
   File.delete("out")
 end
@@ -47,8 +49,8 @@ end
 desc "Run sbh general for all positive input files"
 task :general_positive => "bin/sbh_general" do
   instances_dir = "instances/positive/"
-  printf("%-10s | %-6s | %-6s | %-6s | \n", "File", "N", "Result", "Error")
-  print "---------------------------------------\n";
+  printf("%-10s | %-7s| %-7s| %-7s| %-7s| %-7s| %-7s| %-7s| \n", "File", "Words", "N", "Length", "Used w", "Made w", "Repeats", "Error")
+  print "---------------------------------------------------------------------------\n";
 
   Dir.foreach(instances_dir) do |file|
     instance_path = File.join(instances_dir, file);
@@ -57,8 +59,31 @@ task :general_positive => "bin/sbh_general" do
     `bin/sbh_general #{instance_path} > out`
     result = `bin/sbh_check #{instance_path} out`
     
-    n = file[/\.(\d+)[\+-]/, 1]
-    printf("%-10s | %-6d | %-6d | %-6d |\n", file, n, result, n.to_i - result.to_i)
+    n = file[/\.(\d+)/, 1].to_i
+	given_n = n + file[/\+(\d+)/, 1].to_i
+	res = result.split(" ")
+    printf("%-10s | %-7d| %-7d| %-7d| %-7d| %-7d| %-7d| %-7d|\n", file, given_n, n, res[0], res[1], res[2], res[3], n - res[1].to_i)
+  end
+  File.delete("out")
+end
+
+desc "Run sbh general for all negative input files"
+task :general_negative => "bin/sbh_general" do
+  instances_dir = "instances/negative/"
+  printf("%-10s | %-7s| %-7s| %-7s| %-7s| %-7s| %-7s| %-7s| \n", "File", "Words", "N", "Length", "Used w", "Made w", "Repeats", "Error")
+  print "---------------------------------------------------------------------------\n";
+
+  Dir.foreach(instances_dir) do |file|
+    instance_path = File.join(instances_dir, file);
+    next unless File.file?(instance_path)
+
+    `bin/sbh_general #{instance_path} > out`
+    result = `bin/sbh_check #{instance_path} out`
+    
+    n = file[/\.(\d+)/, 1].to_i
+	given_n = n - file[/\-(\d+)/, 1].to_i
+	res = result.split(" ")
+    printf("%-10s | %-7d| %-7d| %-7d| %-7d| %-7d| %-7d| %-7d|\n", file, given_n, n, res[0], res[1], res[2], res[3], given_n - res[1].to_i)
   end
   File.delete("out")
 end
