@@ -21,3 +21,5 @@ single-base variations.
 == Rake tasks
 * rake compile - compiles sources
 * rake positive - run sbh_positive solution for all instances
+* rake general_positive - run sbh_general solution for all positive instances
+* rake general_negative - run sbh_general solution for all negative instances
