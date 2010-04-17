@@ -1,7 +1,7 @@
 require 'rake/clean'
 
 CLEAN.include('bin/*')
-TARGETS = %w{bin/sbh_positive bin/sbh_negative bin/sbh_check bin/sbh_print_graph}
+TARGETS = %w{bin/sbh_general bin/sbh_positive bin/sbh_negative bin/sbh_check bin/sbh_print_graph}
 SRC = FileList['src/*.cpp']
 
 FileList['src/*.cpp'].each do |src_file|
@@ -38,6 +38,26 @@ task :positive => "bin/sbh_positive" do
     `bin/sbh_positive #{instance_path} > out`
     result = `bin/sbh_check #{instance_path} out`
 
+    n = file[/\.(\d+)[\+-]/, 1]
+    printf("%-10s | %-6d | %-6d | %-6d |\n", file, n, result, n.to_i - result.to_i)
+  end
+  File.delete("out")
+end
+
+desc "Run sbh general for all positive input files"
+task :general_positive => "bin/sbh_general" do
+  instances_dir = "instances/positive/"
+  printf("%-10s | %-6s | %-6s | %-6s | \n", "File", "N", "Result", "Error")
+  print "---------------------------------------\n";
+
+  Dir.foreach(instances_dir) do |file|
+    instance_path = File.join(instances_dir, file);
+    next unless File.file?(instance_path)
+
+    `bin/sbh_general #{instance_path} > out`
+    result = `bin/sbh_check #{instance_path} out`
+
+	p result
     n = file[/\.(\d+)[\+-]/, 1]
     printf("%-10s | %-6d | %-6d | %-6d |\n", file, n, result, n.to_i - result.to_i)
   end
