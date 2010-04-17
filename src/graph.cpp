@@ -52,23 +52,30 @@ adjacency_list transpose(adjacency_list &V){
 }
 
 
-adjacency_matrix create_adjacency_matrix(Instance &instance){
+adjacency_matrix create_adjacency_matrix(Instance &instance, int &min_level){
+	min_level = 200; //FIXME - it should be a value that exceeds the length of the longest oligonucleotid in library
     vector<Olig> &oligs = instance.oligs;
     int n = instance.oligs.size();
     adjacency_matrix adjacency_matrix(n, vector<int>(n));
 
     for(int i = 0; i < n; i++)
+	{
         for(int j = 0; j < n; j++)
+		{
             adjacency_matrix[i][j] = oligs[i].distance(oligs[j]);
+			if (i==j) adjacency_matrix[i][j] = min_level;
+			if (adjacency_matrix[i][j] < min_level) min_level = adjacency_matrix[i][j];
+		}
+	}
     return adjacency_matrix;
 }
 
-adjacency_list create_adjacency_list(vector<vector<int> > &adjacency_matrix){
+adjacency_list create_adjacency_list(vector<vector<int> > &adjacency_matrix, int edge_level){
     int n = adjacency_matrix.size();
     adjacency_list V(n, vector<int>());
     for(int i = 0; i < n; i++)
         for(int j = 0; j < n; j++)
-            if(adjacency_matrix[i][j] == 1 && i != j){
+            if(adjacency_matrix[i][j] == edge_level && i != j){
                 V[i].push_back(j);
             }
     return V;

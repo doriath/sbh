@@ -26,7 +26,9 @@ class Instance{
         int n;
         vector<Olig> oligs;
         void read_file(string file_path);
+		string get_solution(vector<int> &solution);
         void print_solution(vector<int> &solution);
+		void remove_solution_nodes(vector<int> solution);
     private:
 };
 
