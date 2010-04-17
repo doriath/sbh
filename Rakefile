@@ -56,8 +56,7 @@ task :general_positive => "bin/sbh_general" do
 
     `bin/sbh_general #{instance_path} > out`
     result = `bin/sbh_check #{instance_path} out`
-
-	p result
+    
     n = file[/\.(\d+)[\+-]/, 1]
     printf("%-10s | %-6d | %-6d | %-6d |\n", file, n, result, n.to_i - result.to_i)
   end

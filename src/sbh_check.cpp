@@ -8,6 +8,8 @@
 #include <algorithm>
 using namespace std;
 
+char result[100000];
+
 int main(int argc, char **argv){
     if(argc != 3){
         printf("%s <instance_file> <result_file>\n", argv[0]);
@@ -16,7 +18,6 @@ int main(int argc, char **argv){
     Instance instance;
     instance.read_file(argv[1]);
     
-    char result[1000];
     FILE *file = fopen(argv[2], "r");
     fscanf(file, "%s", result);
 
