@@ -42,7 +42,7 @@ int main(int argc, char **argv){
 			countNotListed++;
 		}
     }
-    printf("%d %d %d %d\n", length, count, int(oligs.size()) - count, repeats);
+    printf("%d %d %d %d\n", length, count, int(instance.oligs.size()) - count, repeats);
 
     return 0;
 }
