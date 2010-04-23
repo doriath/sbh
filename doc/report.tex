@@ -38,12 +38,106 @@ Błędami pozytywnymi określamy nadmiar informacji, tzn. na mikromacierzy zosta
 
 \section{SBH with positive errors}
 Jak już wcześniej mówiliśmy, sekwencjonowanie łańcucha DNA z błędami pozytywnymi charakteryzuje się nadmiarową ilością słów otrzymanych w spektrum. Mamy więc pewność, że pośród tych słów znajdzie się dokładnie $n-l+1$ z których będziemy mogli zrekonstruować oryginalną sekwencję.
-W tym celu proponujemy następujący algorytm:
-1. Utwórz graf skierowany {\bf G}. Niech zbiór wierzchołków V stanowią słowa tworzące spektrum sekwencji DNA. Dla każdej pary wierzchołków $(i,j)$ dodaj łuk od wierzchołka $i$ do $j$ wtw (wtw = wtedy i tylko wtedy, nie wiem czy to skrót powszechny) gdy słowo w wierzchołku $j$ jest oddalone o 1 od słowa w wierzchołku $i$
-2. Znajdź silnie spójną składową grafu {\bf SCC}
-3. Uszereguj topologicznie {\bf SCC}
-4. Dla każdego wierzchołka znajdź ścieżkę przechodzącą przez n-l+1 wierzchołków
-5. Wybierz ścieżkę optymalną ścieżkę (//TODO jak to się dzieje?) 
+
+Wprowadźmy na początku pomocniczy algorytm usuwania cykli z grafu $G$:
+
+Algorytm 1:
+1. Znajdź silnie spójne składowe grafu $G$
+2. Jeśli w grafie nie ma silnie spójnych składowych, zakończ algorytm
+3. Uszereguj je topologicznie, traktując każdą silnie spójną składową jako wierzchołek oraz tworząc łuk z silnie spójnej składowej $SCC1$ do $SCC2$ jeśli jakikolwiek wierzchołek z $SCC1$ łączy się z dowolnym wierzchołkiem z $SCC2$
+4. Dla danej silnie spójnej składowej $SCC$ znajdź należący do niej wierzchołek $k$, który łączy się z pozostałymi silnie spójnymi składowymi lub weź dowolny wierzchołek jeśli nie ma połączeń z innymi silnie spójnymi grafu
+5. Usuń wszystkie połączenia wychodzące z $k$, które łączą się z innymi wierzchołkami wchodzącymi w skład $SCC$
+6. Idź do punktu 1
+
+Mając do dyspozycji algorytm usuwania cykli w grafie proponujemy następujący algorytm rozwiązujący problem sekwencjonowania DNA z błędami pozytywnymi:
+
+Algorytm 2:
+1. Utwórz graf skierowany {\bf G}. Niech zbiór wierzchołków V stanowią słowa tworzące spektrum sekwencji DNA. Dla każdej pary wierzchołków $(i,j)$ dodaj łuk od wierzchołka $i$ do $j$ wtw gdy słowo w wierzchołku $j$ jest oddalone o 1 od słowa w wierzchołku $i$
+2. Usuń cykle w grafie {\bf G} tworząc graf {\bf RES} korzystając z Algorytmu 1.
+3. Uszereguj topologicznie {\bf RES}
+4. Wybierz najdłuższą możliwą ścieżkę w grafie {\bf RES}
+
+Złożoność powyższego algorytmu to $ $. Złożoność poszczególnych punktów jest następująca:
+- $S^2$ dla punktu 1,
+- $S + A$ dla punktu 2.1, gdzie liczba łuków jest zależna od słów tworzących spektrum i na pewno nie większa niż $S * (S-1) / 2$
+- $S + A$ dla punktu 2.2
+
+\section{SBH general}
+W przypadku podejścia ogólnego nie mamy gwarancji, że istnieje ścieżka po łukach o koszcie 1, która utworzy sekwencję odpowiedniej długości. Musimy więc uwzględnić mniej korzystne połączenia o kosztach 2 i wyższych. W związku z tym wykorzystamy algorytm sekwencjonowania z błędami pozytywnymi uogólniając jego działanie.
+
+Algorytm po modyfikacji wygląda następująco
+1. Wczytaj zbiór wszystkich słów tworzących spektrum do słownika OLIGS
+2. Utwórz graf skierowany {\bf G}. Niech zbiór wierzchołków V stanowią słowa w słowniku OLIGS. Dla każdej pary wierzchołków $(i,j)$ dodaj łuk od wierzchołka $i$ do $j$ o koszcie równym odległości słowa w wierzchołku $j$ względem słowa w wierzchołku $i$
+3. Znajdź najniższy koszt łuku MIN w grafie {\bf G}
+4. Utwórz graf skierowany {\bf G'}, który jest podgrafem grafu {\bf G} i zawiera tylko łuki o koszcie MIN
+5. Usuń cykle w grafie {\bf G'} tworząc graf {\bf RES} korzystając z Algorytmu 1
+6. Uszereguj topologicznie {\bf RES}
+7. Wybierz najdłuższą możliwą ścieżkę {\bf PATH} w grafie {\bf RES}
+8. Usuń ze słownika OLIGS słowa wchodzące w skład ścieżki {\bf PATH}, w zamian dodając słowo utworzone przez połączenie słów zgodnie z kolejnością w ścieżce {\bf PATH}
+9. Jeśli słownik OLIGS zawiera dokładnie jedno słowo, to zakończ, w przeciwnym wypadku idź do punktu 2
+
+Ideą algorytmu jest wyszukanie teoretycznie najkorzystniejszych połączeń o koszcie 1 tworzących sekwencje pełne (tj. w ich skład wchodzą tylko istniejące słowa), a jeśli nie uda się utworzyć na ich podstawie sekwencji wyjściowej, to połączenie sekwencji utworzonych w ten sposób uwzględniając brakujące słowa, czyli łącząc łukami o koszcie 2 i wyższymi. 
+
+Przykład:
+Dane wejściowe:
+$OLIGS = { AGC, GCT, CTG, TGT, GTG, TGA, GAC, ACT }$
+$n = 10$
+
+               ----------------------
+               |                    v
+AGC -> GCT -> CTG -> TGT -> GTG -> TGA -> GAC -> ACT
+               ^      ^      |                    |
+               |      --------                    |
+               ------------------------------------
+
+Powyżej zaprezentowano graf utworzony w kroku 4 dla wartości $MIN=1$. Wcześniejsze kroki są jednoznacznie interpretowalne, a utworzenie pełnego grafu z punktu 2 bardzo zamgliłoby obraz grafu. Usuńmy teraz cykle.
+Jak widać w powyższym grafie mamy następujące silnie spójne składowe:
+$A$ - {AGC}
+$B$ - {GCT}
+$C$ - {CTG, TGT, GTG, TGA, GAC, ACT}
+Musimy więc rozbić wszystkie silnie spójne składowe usuwając cykle, co umożliwi nam utworzenie nadłuższej możliwej ścieżki od ustalonego punktu.
+Uzyskaliśmy tylko jedną silnie spójną składową $C$, która posiada więcej niż jeden wierzchołek, więc ją należy rozbić. Zauważmy, że po uszeregowaniu topologicznie spójnych składowych uzyskamy następujące uporządkowanie: $A->B->C$, a więc bierzemy pierwszy lepszy wierzchołek silnie spójnej składowej C i usuwamy z niego wszystkie łuki. Ponieważ wybieramy dowolny wierzchołek, załóżmy, że jest to wierzchołek $TGT$, usuwamy zatem łuk prowadzący do $GTG$.
+Ponownie generujemy silnie spójne składowe grafu:
+$A$ - {AGC}
+$B$ - {GCT}
+$C$ - {CTG, TGA, GAC, ACT}
+$D$ - {TGT}
+$E$ - {GTG}
+Ponieważ znów mamy silnie spójną składową, która ma więcej niż jeden wierzchołek, to z niej będziemy usuwać cykl. Tym razem jednak po uszeregowaniu topologicznie silnie spójnych składowych otrzymujemy zależność $A->B->C->D->E$. Oznacza to, że w silnie spójnej składowej C musimy odnaleźć wierzchołek prowadzący do silnie spójnej składowej $D$. Takim wierzchołkiem jest $CTG$, usuwamy więc z niego wszystkie łuki wychodzące z niego, które prowadzą do innych wierzchołków silnie spójnej składowej $C$. Zostanie usunięty łuk $CTG->TGA$.
+W kolejnej iteracji podziału na silnie spójne składowe uzyskamy siedem jedno-elementowych zbiorów, a więc usuwanie cykli możemy zakończyć. Po wykonaniu powyższych operacji graf wygląda następująco:
+
+AGC -> GCT -> CTG -> TGT    GTG -> TGA -> GAC -> ACT
+               ^      ^      |                    |
+               |      --------                    |
+               ------------------------------------
+
+Po uszeregowaniu topologicznie możemy uzyskać m.in. następującą kolejność wierzchołków:
+$AGC, GCT, GTG, TGA, GAC, ACT, CTG, TGT$
+Szukamy najdłuższej możliwej ścieżki korzystając z uporządkowania topologicznego:
+$GTG, TGA, GAC, ACT, CTG, TGT$
+I tworzymy nowe słowo sklejając poszczególne elementy ze sobą w sekwencję $GTGACTGT$.
+Usuwamy wierzchołki, z których utworzyliśmy powyższą sekwencją. Dodajemy otrzymaną sekwencję do grafu, który obecnie wygląda następująco:
+
+AGC -> GCT         GTGACTGT
+
+Uwzględnione są tylko łuki o koszcie $MIN=1$ (czyli niejako uzyskaliśmy las grafów). Ponieważ nie ma tu silnie spójnych składowych możemy przystąpić do łączenia elementów. Najdłuższą ścieżką jest $AGC, GCT$ (liczy się ilość wierzchołków wchodzących w skład ścieżki, nie łączna długość słów!), zatem tą sekwencję łączymy i dodajemy do grafu usuwając wykorzystane do jej utworzenia wierzchołki.
+Otrzymujemy wówczas poniższy graf:
+
+         4
+  ----------------
+  |              v
+AGCT          GTGACTGT
+  ^              |
+  ----------------
+         8
+		 
+Jest to graf pełny, nad łukami zaznaczono ich koszty. Ponieważ najniższym kosztem jest $MIN=4$, oznacza to, że nie istnieje już żadne bezpośrednie połączenie, musimy połączyć te sekwencje "grubymi nićmi" aby utworzyć sekwencję końcową:
+$AGCTGTGACTGT$
+Zauważmy, że jest ona dłuższa, niż $n=10$. W związku z tym sekwencję wynikową przycinamy do długości odpowiadającej spodziewanemu wynikowi otrzymując w rezultacie:
+$AGCTGTGACT$
+Algorytm zakończył swoje działanie. Zupełnie przypadkowo uzyskana sekwencja zgadza się z sekwencją wyjściową, mimo tego, że w ostatnim kroku algorytmu zostały sklejone słowa w sposób niekorzystny.
+Należy zauważyć, że znaczny wpływ na działanie algorytmu ma sposób wyboru wierzchołka w silnie spójnej składowej grafu z którego zostaną usunięte łuki, a także kolejność występowania wierzchołków w silnie spójnych składowych grafu. Jeśli na początku zamiast usuwać łuk z wierzchołka $TGT$ usunęlibyśmy dowolny inny łuk z tej silnie spójnej składowej grafu, to dalsze iteracje miałyby inny przebieg.
+
 
 \section{Wyniki}
 
