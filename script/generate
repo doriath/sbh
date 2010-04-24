@@ -30,7 +30,7 @@ class Generator
   private
 
   def generate_positive
-    dna = generate_dna
+    dna = generate_dna(@n)
     oligs = []
     @n.times do |i|
       oligs << dna[i, @len]
@@ -50,16 +50,27 @@ class Generator
   end
 
   def generate_negative
-    throw "Not implemented"
+    dna = generate_dna(@n + @errors)
+    oligs = []
+    @n.times do |i|
+      oligs << dna[i, @len]
+    end
+
+    @errors.times do
+      i = rand(oligs.length)
+      oligs.delete_at(i)
+    end
+
+    oligs.sort_by { rand }
   end
 
-  def generate_dna
+  def generate_dna(n)
     array = ['A', 'C', 'T', 'G']
     result = (0...@len).map { array[rand(4)] }.join
 
     used = Hash.new(0)
     used[result] = true
-    (@n-1).times do |index|
+    (n-1).times do |index|
       available = array.select do |a|
         !used.has_key? result[index + 1, @len - 1] + a
       end
@@ -71,7 +82,7 @@ class Generator
       used[result[-@len, @len]] = true
     end
 
-    throw "Some negative errors appear in sequence" if used.size != @n
+    throw "Some negative errors appear in sequence" if used.size != n
 
     result
   end
@@ -86,8 +97,9 @@ end
 generator = Generator.new type, n, errors
 
 srand
-puts n
-generator.generate.each do |olig|
+oligs = generator.generate
+puts oligs.length
+oligs.each do |olig|
   puts olig
 end
 
