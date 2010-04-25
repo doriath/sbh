@@ -20,11 +20,10 @@ int main(int argc, char **argv){
     }
 
     Instance instance;
-	Instance instance2;
     instance.read_file(argv[1]);
 	string result;
 
-	while (instance.oligs.size() != 0)
+	while (instance.oligs.size() != 1)
 	{
 		int min_level;
 		adjacency_matrix adjacency_matrix = create_adjacency_matrix(instance, min_level);
@@ -33,26 +32,8 @@ int main(int argc, char **argv){
 		vector<int> solution = calc(V);
 		result = instance.get_solution(solution);
 		instance.remove_solution_nodes(solution);
-		instance2.oligs.insert(instance2.oligs.begin(), result);
-	}
 
-	while (instance2.oligs.size() != 1)
-	{
-		int min_level;
-		adjacency_matrix adjacency_matrix = create_adjacency_matrix(instance2, min_level);
-		adjacency_list V = create_adjacency_list(adjacency_matrix, min_level);
-		
-		vector<int> solution = calc(V);
-		result = instance2.get_solution(solution);
-		instance2.remove_solution_nodes(solution);
-		if (result.length() >= instance.n)
-		{
-			result = result.substr(0, instance.n);
-			instance2.oligs.insert(instance2.oligs.begin(), result);
-			break;
-		}
-		else
-			instance2.oligs.insert(instance2.oligs.begin(), result);
+		instance.oligs.insert(instance.oligs.begin(), result);
 	}
 	vector<int> sol(1,0);
 	instance.print_solution(sol);
