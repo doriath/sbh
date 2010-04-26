@@ -25,21 +25,15 @@ int main(int argc, char **argv){
 
 	while (instance.oligs.size() != 1)
 	{
-		int max_level;
-		adjacency_matrix adjacency_matrix = create_adjacency_matrix_relative(instance, max_level);
-		adjacency_list V = create_adjacency_list(adjacency_matrix, max_level);
+		int min_level;
+		adjacency_matrix adjacency_matrix = create_adjacency_matrix(instance, min_level);
+		adjacency_list V = create_adjacency_list(adjacency_matrix, min_level);
 		
 		vector<int> solution = calc(V);
 		result = instance.get_solution(solution);
 		instance.remove_solution_nodes(solution);
-		if (result.length() >= instance.n)
-		{
-			result = result.substr(0, instance.n);
-			instance.oligs.insert(instance.oligs.begin(), result);
-			break;
-		}
-		else
-			instance.oligs.insert(instance.oligs.begin(), result);
+
+		instance.oligs.insert(instance.oligs.begin(), result);
 	}
 	vector<int> sol(1,0);
 	instance.print_solution(sol);
