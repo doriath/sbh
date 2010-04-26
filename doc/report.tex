@@ -105,6 +105,8 @@ najdłuższą ścieżkę zaczynającą się w tym wierzchołku - oznaczmy ją pr
 możemy znaleść najdłuższą ściężkę w grafie $G$ która jest zarazem optymalnym rozwiązaniem dla problemu SBH z błędami pozytywnymi.
 
 Gdy graf nie jest acykliczny, nasza heurystyka usuwa krawędzie używając poniższego algorytmu:
+
+Algorytm 1
 \begin{enumerate}
  \item Znajdź silnie spójne składowe grafu $G$
  \item Jeśli graf jest acykliczny, zakończ algorytm
@@ -123,6 +125,8 @@ iteracji usuwana jest przynajmniej jedna krawedź w grafie, a więc maksymalnie 
 algorytmu to $O(|S|)$.
 
 Mając do dyspozycji algorytm usuwania cykli w grafie proponujemy następujący algorytm rozwiązujący problem sekwencjonowania DNA z błędami pozytywnymi:
+
+Algorytm 2
 \begin{enumerate}
  \item Utwórz graf skierowany $G$. Niech zbiór wierzchołków V stanowią słowa tworzące spektrum sekwencji DNA. Dla każdej pary 
  wierzchołków $(i,j)$ dodaj łuk od wierzchołka $i$ do $j$ wtw gdy słowo w wierzchołku $j$ jest oddalone o 1 od słowa w wierzchołku $i$
@@ -142,34 +146,39 @@ Złożoność powyższego algorytmu to suma złożoności jego poszczególnych k
 Ostateczna złożoność całej heurystyki wynosi $O(|S|^2)$.
 
 \section{SBH general}
-W przypadku podejścia ogólnego nie mamy gwarancji, że istnieje ścieżka po łukach o koszcie 1, która utworzy sekwencję odpowiedniej długości. Musimy więc uwzględnić mniej korzystne połączenia o kosztach 2 i wyższych. W związku z tym wykorzystamy algorytm sekwencjonowania z błędami pozytywnymi uogólniając jego działanie. Algorytm po modyfikacji wygląda następująco:
+W przypadku podejścia ogólnego nie mamy gwarancji, że istnieje ścieżka po łukach o koszcie 1, która utworzy sekwencję odpowiedniej długości. 
+Musimy więc uwzględnić mniej korzystne połączenia o kosztach 2 i wyższych. W związku z tym wykorzystamy algorytm sekwencjonowania z błędami 
+pozytywnymi uogólniając jego działanie. Algorytm po modyfikacji wygląda następująco:
 
-Algorytm 3:
 \begin{enumerate}
- \item Wczytaj zbiór wszystkich słów tworzących spektrum do słownika OLIGS
- \item Utwórz graf skierowany {\bf G}. Niech zbiór wierzchołków V stanowią słowa w słowniku OLIGS. Dla każdej pary wierzchołków $(i,j)$ dodaj łuk od wierzchołka $i$ do $j$ o koszcie równym odległości słowa w wierzchołku $j$ względem słowa w wierzchołku $i$
- \item Znajdź najniższy koszt łuku MIN w grafie {\bf G}
- \item Utwórz graf skierowany {\bf G'}, który jest podgrafem grafu {\bf G} i zawiera tylko łuki o koszcie MIN
- \item Usuń cykle w grafie {\bf G'} tworząc graf {\bf RES} korzystając z Algorytmu 1
- \item Uszereguj topologicznie {\bf RES}
- \item Wybierz najdłuższą możliwą ścieżkę {\bf PATH} w grafie {\bf RES}
- \item Usuń ze słownika OLIGS słowa wchodzące w skład ścieżki {\bf PATH}, w zamian dodając słowo utworzone przez połączenie słów zgodnie z kolejnością w ścieżce {\bf PATH}
- \item Jeśli słownik OLIGS zawiera dokładnie jedno słowo, to zakończ, w przeciwnym wypadku idź do punktu 2
+ \item Wczytaj zbiór wszystkich słów tworzących spektrum do słownika \texttt{OLIGS}
+ \item Utwórz graf skierowany $G$. Niech zbiór wierzchołków $V$ stanowią słowa w słowniku OLIGS. Dla każdej pary wierzchołków $(i,j)$ dodaj 
+       łuk od wierzchołka $i$ do $j$ o koszcie równym odległości słowa w wierzchołku $j$ względem słowa w wierzchołku $i$
+ \item Znajdź najniższy koszt łuku \texttt{MIN} w grafie $G$
+ \item Utwórz graf skierowany $G'$, który jest podgrafem grafu $G$ i zawiera tylko łuki o koszcie \texttt{MIN}
+ \item Usuń cykle w grafie $G'$ tworząc graf $G'_{DAG}$ korzystając z Algorytmu 1
+ \item Uszereguj topologicznie $G'_{DAG}$
+ \item Wybierz najdłuższą możliwą ścieżkę \texttt{PATH} w grafie $G'_{DAG}$
+ \item Usuń ze słownika \texttt{OLIGS} słowa wchodzące w skład ścieżki \texttt{PATH}, w zamian dodając słowo utworzone przez połączenie słów zgodnie z kolejnością w ścieżce \texttt{PATH}
+ \item Jeśli słownik \texttt{OLIGS} zawiera dokładnie jedno słowo, to zakończ, w przeciwnym wypadku idź do punktu 2
 \end{enumerate}
 
-Z punktu widzenia złożoności należy zauważyć, że punkt 3 można zrealizować w ramach punktu 2. Zauważmy ponadto, że punkty od 4 do 7 to dokładnie Algorytm 2, z uwzględnieniem łuków o koszcie MIN (zamiast o koszcie 1 jak podano w poprzednim algorytmie). Złożoności pozostałych punktów to:
+Z punktu widzenia złożoności należy zauważyć, że punkt 3 można zrealizować w ramach punktu 2. Zauważmy ponadto, że punkty od 4 do 7 to dokładnie algorytm pozytywny, 
+z uwzględnieniem łuków o koszcie MIN (zamiast o koszcie 1 jak podano w poprzednim algorytmie). Złożoności pozostałych punktów to:
 \begin{itemize}
  \item $O(S^2)$ dla punktu 2
  \item $O(1)$ dla usuwania w punkcie 8, tworzenie słowa jest liniowo od ilości oligonukleotydów, które wchodzą w jego skład
 \end{itemize}
-W związku z tym ostateczna złożoność algorytmu to $O(S * (S^2 + Algorytm2))$. Przy czym $S$ występuje w najgorszym wypadku, kiedy w grafie wyjściowym będziemy mieć słowa o długości równej liczbie słów instancji i będą istnieć tylko pojedyncze połączenia o kosztach $1, 2, 3, ..., S$.
+W związku z tym ostateczna złożoność algorytmu to $O(|S|^3)$. Przy czym $|S|^3$ występuje w najgorszym wypadku, 
+kiedy w grafie wyjściowym będziemy mieć słowa o długości równej liczbie słów instancji i będą istnieć tylko pojedyncze połączenia o kosztach $1, 2, 3, ..., S$.
 
-Ideą algorytmu jest wyszukanie teoretycznie najkorzystniejszych połączeń o koszcie 1 tworzących sekwencje pełne (tj. w ich skład wchodzą tylko istniejące słowa), a jeśli nie uda się utworzyć na ich podstawie sekwencji wyjściowej, to połączenie sekwencji utworzonych w ten sposób uwzględniając brakujące słowa, czyli łącząc łukami o koszcie 2 i wyższymi. 
+Ideą algorytmu jest wyszukanie teoretycznie najkorzystniejszych połączeń o koszcie 1 tworzących sekwencje 
+pełne (tj. w ich skład wchodzą tylko istniejące słowa), a jeśli nie uda się utworzyć na ich podstawie sekwencji wyjściowej, 
+to połączenie sekwencji utworzonych w ten sposób uwzględniając brakujące słowa, czyli łącząc łukami o koszcie 2 i wyższymi. 
 
 Przykład:
-Dane wejściowe:
-$OLIGS = { AGC, GCT, CTG, TGT, GTG, TGA, GAC, ACT }$
-$n = 10$
+$$OLIGS = { AGC, GCT, CTG, TGT, GTG, TGA, GAC, ACT }$$
+$$n = 10$$
 
 \begin{figure}[h]
   \footnotesize\centering
@@ -178,19 +187,31 @@ $n = 10$
 
 Powyżej zaprezentowano graf utworzony w kroku 4 dla wartości $MIN=1$. Wcześniejsze kroki są jednoznacznie interpretowalne, a utworzenie pełnego grafu z punktu 2 bardzo zamgliłoby obraz grafu. Usuńmy teraz cykle.
 Jak widać w powyższym grafie mamy następujące silnie spójne składowe:
-$A$ - {AGC}
-$B$ - {GCT}
-$C$ - {CTG, TGT, GTG, TGA, GAC, ACT}
+\begin{itemize}
+ \item $A$ - {AGC}
+ \item $B$ - {GCT}
+ \item $C$ - {CTG, TGT, GTG, TGA, GAC, ACT}
+\end{itemize}
 Musimy więc rozbić wszystkie silnie spójne składowe usuwając cykle, co umożliwi nam utworzenie nadłuższej możliwej ścieżki od ustalonego punktu.
-Uzyskaliśmy tylko jedną silnie spójną składową $C$, która posiada więcej niż jeden wierzchołek, więc ją należy rozbić. Zauważmy, że po uszeregowaniu topologicznie spójnych składowych uzyskamy następujące uporządkowanie: $A->B->C$, a więc bierzemy pierwszy lepszy wierzchołek silnie spójnej składowej C i usuwamy z niego wszystkie łuki. Ponieważ wybieramy dowolny wierzchołek, załóżmy, że jest to wierzchołek $TGT$, usuwamy zatem łuk prowadzący do $GTG$.
+Uzyskaliśmy tylko jedną silnie spójną składową $C$, która posiada więcej niż jeden wierzchołek, więc ją należy rozbić. 
+Zauważmy, że po uszeregowaniu topologicznie spójnych składowych uzyskamy następujące uporządkowanie: $A \rightarrow B \rightarrow C$, 
+a więc bierzemy pierwszy lepszy wierzchołek silnie spójnej składowej C i usuwamy z niego wszystkie łuki. 
+Ponieważ wybieramy dowolny wierzchołek, załóżmy, że jest to wierzchołek $TGT$, usuwamy zatem łuk prowadzący do $GTG$.
 Ponownie generujemy silnie spójne składowe grafu:
-$A$ - {AGC}
-$B$ - {GCT}
-$C$ - {CTG, TGA, GAC, ACT}
-$D$ - {TGT}
-$E$ - {GTG}
-Ponieważ znów mamy silnie spójną składową, która ma więcej niż jeden wierzchołek, to z niej będziemy usuwać cykl. Tym razem jednak po uszeregowaniu topologicznie silnie spójnych składowych otrzymujemy zależność $A->B->C->D->E$. Oznacza to, że w silnie spójnej składowej C musimy odnaleźć wierzchołek prowadzący do silnie spójnej składowej $D$. Takim wierzchołkiem jest $CTG$, usuwamy więc z niego wszystkie łuki wychodzące z niego, które prowadzą do innych wierzchołków silnie spójnej składowej $C$. Zostanie usunięty łuk $CTG->TGA$.
-W kolejnej iteracji podziału na silnie spójne składowe uzyskamy siedem jedno-elementowych zbiorów, a więc usuwanie cykli możemy zakończyć. Po wykonaniu powyższych operacji graf wygląda następująco:
+\begin{itemize}
+ \item $A$ - {AGC}
+ \item $B$ - {GCT}
+ \item $C$ - {CTG, TGA, GAC, ACT}
+ \item $D$ - {TGT}
+ \item $E$ - {GTG}
+\end{itemize}
+Ponieważ znów mamy silnie spójną składową, która ma więcej niż jeden wierzchołek, to z niej będziemy usuwać cykl. 
+Tym razem jednak po uszeregowaniu topologicznie silnie spójnych składowych otrzymujemy zależność $A \rightarrow B \rightarrow C \rightarrow D \rightarrow E$. 
+Oznacza to, że w silnie spójnej składowej C musimy odnaleźć wierzchołek prowadzący do silnie spójnej składowej $D$. 
+Takim wierzchołkiem jest $CTG$, usuwamy więc z niego wszystkie łuki wychodzące z niego, które prowadzą do innych 
+wierzchołków silnie spójnej składowej $C$. Zostanie usunięty łuk $CTG \rightarrow TGA$.
+W kolejnej iteracji podziału na silnie spójne składowe uzyskamy siedem jedno-elementowych zbiorów, a więc usuwanie 
+cykli możemy zakończyć. Po wykonaniu powyższych operacji graf wygląda następująco:
 
 \begin{figure}[h]
   \footnotesize\centering
@@ -199,9 +220,9 @@ W kolejnej iteracji podziału na silnie spójne składowe uzyskamy siedem jedno-
 
 Po uszeregowaniu topologicznie możemy uzyskać m.in. następującą kolejność wierzchołków:
 $AGC, GCT, GTG, TGA, GAC, ACT, CTG, TGT$
-Szukamy najdłuższej możliwej ścieżki korzystając z uporządkowania topologicznego:
+Szukamy najdłuższej możliwej ścieżki korzystając z uporządkowania topologicznego: \linebreak
 $GTG, TGA, GAC, ACT, CTG, TGT$
-I tworzymy nowe słowo sklejając poszczególne elementy ze sobą w sekwencję $GTGACTGT$.
+i tworzymy nowe słowo sklejając poszczególne elementy ze sobą w sekwencję $GTGACTGT$.
 Usuwamy wierzchołki, z których utworzyliśmy powyższą sekwencją. Dodajemy otrzymaną sekwencję do grafu, który obecnie wygląda następująco:
 
 \begin{figure}[h]
@@ -209,7 +230,10 @@ Usuwamy wierzchołki, z których utworzyliśmy powyższą sekwencją. Dodajemy o
   \includegraphics[width=\textwidth,keepaspectratio]{Graph3.png}
 \end{figure}
 
-Uwzględnione są tylko łuki o koszcie $MIN=1$ (czyli niejako uzyskaliśmy las grafów). Ponieważ nie ma tu silnie spójnych składowych możemy przystąpić do łączenia elementów. Najdłuższą ścieżką jest $AGC, GCT$ (liczy się ilość wierzchołków wchodzących w skład ścieżki, nie łączna długość słów!), zatem tą sekwencję łączymy i dodajemy do grafu usuwając wykorzystane do jej utworzenia wierzchołki.
+Uwzględnione są tylko łuki o koszcie $MIN=1$ (czyli niejako uzyskaliśmy las grafów). 
+Ponieważ graf jest acykliczny to możemy przystąpić do łączenia elementów. 
+Najdłuższą ścieżką jest $AGC, GCT$ (liczy się ilość wierzchołków wchodzących w skład ścieżki, nie łączna długość słów!), 
+zatem tą sekwencję łączymy i dodajemy do grafu usuwając wykorzystane do jej utworzenia wierzchołki.
 Otrzymujemy wówczas poniższy graf:
 
 \begin{figure}[h]
@@ -228,16 +252,17 @@ Należy zauważyć, że znaczny wpływ na działanie algorytmu ma sposób wyboru
 W algorytmie dla błędów pozytywnych korzystaliśmy z funkcji odległości dwóch łańcuchów tekstowych względem siebie. Było to możliwe dzięki temu, że porównywane łańcuchy miały tą samą długość. W przypadku algorytmu ogólnego, w którym również wykorzystujemy pojęcie odległości do konstrukcji łuków wkrada się pewna nieścisłość. Otóż porównywane są łańcuchy o różnych długościach. Jeśli więc mamy dwa łańcuchy S1=$AAAAAAA$ (długości 7 znaków) oraz S2=$GGGGGGGGAAA$ (długości 11 znaków), to zostanie utworzony łuk od S1 do S2 o koszcie 7, a w drugą stronę od S2 do S1 o koszcie 8. Zgodnie z algorytmem ogólnym uwzględniony zostanie łuk o niższym koszcie jako lepszy. Jak widać jest to złudne wrażenie, ponieważ łącząc elementy przy pomocy drugiego łuku aż trzy znaki pokryją się ze sobą, co oznacza, że będzie to lepsze połączenie de facto, bo utworzy krótszą sekwencję.
 Z powyższej obserwacji wynika, że należy zmodyfikować funkcję nadawania wartości łukom, aby uwzględniać relatywną liczbę powtarzających się znaków. W ten sposób tworzymy algorytm, który radzi sobie lepiej z instancjami zawierającymi błędy negatywne. Pogrubione zostały fragmenty, które uległy modyfikacji.
 
-Algorytm 4:
 \begin{enumerate}
- \item Wczytaj zbiór wszystkich słów tworzących spektrum do słownika OLIGS
- \item Utwórz graf skierowany {\bf G}. Niech zbiór wierzchołków V stanowią słowa w słowniku OLIGS. Dla każdej pary wierzchołków $(i,j)$ dodaj łuk od wierzchołka $i$ do $j$ o koszcie równym {\bf różnicy długości słowa $i$ do odległości słowa w wierzchołku $j$ względem słowa w wierzchołku $i$}
- \item Znajdź {\bf najwyższy koszt łuku MAX} w grafie {\bf G}
- \item Utwórz graf skierowany {\bf G'}, który jest podgrafem grafu {\bf G} i zawiera tylko łuki o koszcie {\bf MAX}
- \item Usuń cykle w grafie {\bf G'} tworząc graf {\bf RES} korzystając z Algorytmu 1
- \item Uszereguj topologicznie {\bf RES}
- \item Wybierz najdłuższą możliwą ścieżkę {\bf PATH} w grafie {\bf RES}
- \item Usuń ze słownika OLIGS słowa wchodzące w skład ścieżki {\bf PATH}, w zamian dodając słowo utworzone przez połączenie słów zgodnie z kolejnością w ścieżce {\bf PATH}
+ \item Wczytaj zbiór wszystkich słów tworzących spektrum do słownika \texttt{OLIGS}
+ \item Utwórz graf skierowany $G$. Niech zbiór wierzchołków \texttt{V} stanowią słowa w słowniku \texttt{OLIGS}. 
+       Dla każdej pary wierzchołków $(i,j)$ dodaj łuk od wierzchołka $i$ do $j$ o koszcie równym 
+       {\bf różnicy długości słowa $i$ do odległości słowa w wierzchołku $j$ względem słowa w wierzchołku $i$}
+ \item Znajdź {\bf najwyższy koszt łuku \texttt{MAX}} w grafie $G$
+ \item Utwórz graf skierowany $G'$, który jest podgrafem grafu $G$ i zawiera tylko łuki o koszcie $MAX$
+ \item Usuń cykle w grafie $G'$ tworząc graf $G'_{DAG}$ korzystając z Algorytmu 1
+ \item Uszereguj topologicznie $G'_{DAG}$
+ \item Wybierz najdłuższą możliwą ścieżkę \texttt{PATH} w grafie $G'_{DAG}$
+ \item Usuń ze słownika OLIGS słowa wchodzące w skład ścieżki \texttt{PATH}, w zamian dodając słowo utworzone przez połączenie słów zgodnie z kolejnością w ścieżce \texttt{PATH}
  \item Jeśli słownik OLIGS zawiera dokładnie jedno słowo, to zakończ, w przeciwnym wypadku idź do punktu 2
 \end{enumerate}
 
@@ -247,7 +272,7 @@ Powyższy algorytm posiada identyczną złożoność jak algorytm ogólny, dzia�
 
 Wszystkie poniższe wykresy i porównania zostały wygenerowane na zbiorze instancji testowych. Należy przy tym zauważyć, że instancje z błędami pozytywnymi charakteryzują się tym, że można w nich wyróżnić jeden długi łańcuch, do którego czasem dochodzą lub wychodzą pojedyncze rozgałęzienia, tworząc czasem cykl. W przypadku instancji z błędami negatywnymi możemy wyróżnić kilka długich łańcuchów, które w najczęściej są w prosty sposób rozgałęzione. Zauważmy, że to, że dany łańcuch można idealnie "skleić" w całość nie oznacza, że jest to optymalne sklejenie. Może się bowiem tak zdarzyć, że brakujące słowa tworzyły cykl w grafie połączeń, co oczywiście zwiększa możliwość różnych kombinacji sekwencji z takiego łańcucha (inne symbole byłyby na początku i na końcu utworzonej sekwencji, przez co mogło istnieć lepsze dopasowanie).
 
-\subsection{Algorytm 3}
+\subsection{Heurystka ogólna}
 
 Algorytm ogólny został przetestowany zarówno na zbiorze instancji z błędami negatywnymi jak i zbiorze instancji z błędami pozytywnymi. Jako interesujące nas statystyki uwzględniliśmy procent wykorzystania słów znajdujących się w spektrum oraz liczbę popełnionych błędów (dodanych słów). Ponieważ dla danej liczy słów w spektrum istniało czasem po kilka instancji, dla takich przypadków uwzględnialiśmy wartość średnią interesującego nas parametru.
 
@@ -279,11 +304,11 @@ Wydaje się, że różnica jest dość uzasadniona - wersja algorytmu pilnująca
 
 Na wykresie obrazującym liczbę niewykorzystanych słów z instancji dla poszczególnych wielkości instancji widać, że nie są to duże braki. Zaznaczona na czarno linia trendu pokazuje, że średnio 12-13 słów jest niewykorzystanych, co daje dość dużą skuteczność algorytmu (ponad 90\% jak wcześniej pokazano).
 
-\subsection{Algorytm 2}
+\subsection{Heurystyka - błędy pozytywne}
 
 Algorytm specyficzny dla problemów z błędami pozytywnymi jest tak naprawdę szczególnym przypadkiem algorytmu ogólnego. Różnica polega na tym, że algorytm ten nie uwzględnia w ogóle łuków o kosztach wyższych niż jeden. Wynika to z obserwacji, że w instancji z błędami pozytywnymi (a więc z nadmiarem słów) musi istnieć ścieżka oparta o łuki o koszcie 1, która zawiera dokładnie $n$ wierzchołków. Algorytm ten poszukuje właśnie takiej ścieżki. Zauważmy, że wykres procentowego wykorzystania słów z instancji dla Algorytmu 2 wygląda identycznie jak analogiczny wykres dla Algorytmu 3. Jedynym sensownym porównaniem wydaje się być porównanie czasowe.
 
-\subsection{Algorytm 4}
+\subsection{Heurystyka - błędy negatywne}
 
 Algorytm specyficzny dla problemów z błędami negatywnymi jest zmodyfikowaną wersją algorytmu ogólnego. Różnią się one metodą wyznaczania wartości kosztów na łukach oraz rodzajem łuków najbardziej porządanych w rozwiązaniu (Algorytm 3 szuka najniższego kosztu, Algorytm 4 szuka najwyższego zysku). Mimo tak niewielkiej zmiany możemy zaobserwować na poniższym wykresie znaczny wzrost skuteczności algorytmu w wykorzystywaniu słów tworzących daną instancję.
 
@@ -299,7 +324,7 @@ Siłą rzeczy algorytm ten popełnia mało błędów. Jako błąd traktuje się 
   \includegraphics[width=\textwidth,keepaspectratio]{unusedWords_negative.png}
 \end{figure}
 
-\subsection{Algorytm 2 kontra Algorytm 3}
+\subsection{Porównanie ogólnego i dla błędów pozytywnych}
 
 \begin{figure}[h]
   \footnotesize\centering
@@ -309,7 +334,7 @@ Siłą rzeczy algorytm ten popełnia mało błędów. Jako błąd traktuje się 
 Jak widać na powyższym wykresie istnieje minimalna różnica czasowa w działaniu tych dwóch algorytmów. Przypadek okrojony działa o tysięczne sekundy szybciej, ponieważ nie ma narzutu na sprawdzanie warunku stopu oraz nie są tworzone kilkukrotnie sekwencję z dotychczasowych rozwiązań. Jednak w związku z tak niewielkimi różnicami można powiedzieć, że algorytmy te są porównywalne dla zbioru instancji z błędami pozytywnymi.
 Gdybyśmy uruchomili algorytm dla instancji z błędami negatywnymi otrzymalibyśmy mierny wynik, ponieważ zostałby uwzględniony tylko jeden graf wchodzący w skład lasu grafów który jest badaną instancją.
 
-\subsection{Algorytm 4 kontra Algorytm 3}
+\subsection{Porównanie ogólnego i dla błędów negatywnych}
 
 \begin{figure}[h]
   \footnotesize\centering
