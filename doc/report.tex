@@ -39,9 +39,12 @@ Dla ułatwienia dalszego opisu wprowadźmy kilka terminów:
 
   \item[Spektrum] %TODO
   \item[Sekwencja DNA] %TODO
-  \item[Błąd negatywny]
-  \item[Błąd pozytywny] 
-  \item[Graf DNA]
+  \item[Błąd negatywny] %TODO
+  \item[Błąd pozytywny] %TODO
+  \item[Graf DNA] %TODO
+
+
+
 \end{description}
 W zaproponowanych przez nas podejściach będziemy wykorzystywać teorię grafów w celu szybkiego łączenia oligonukleotydów oddalonych od siebie o jak najmniejszą wartość.
 
@@ -50,9 +53,36 @@ Przypadek idealny to taki, gdzie na mikromacierzy dopasowały się wszystkie sł
 Mówimy, że dane odwzorowanie łańcucha DNA na mikromacierzy zawiera błędy negatywne, jeśli z jakiegoś powodu niektóre słowa nie zostały dopasowane do macierzy. Otrzymujemy więc niepełne spektrum sekwencji.
 Błędami pozytywnymi określamy nadmiar informacji, tzn. na mikromacierzy zostały dopasowane słowa, które nie występują w sekwencji oryginalnej. Mamy więc zbiór słów które są nadzbiorem zbioru słów wchodzących w skład oryginalnej sekwencji.
 
-\section{Generowanie losowych instancji SBH}
+%TODO założenie że n << 4^l
 
-%TODO Tutaj o generowaniu instancji ...
+\section{Generowanie losowych instancji}
+Wszystkie algorytmy heurystyczne były sprawdzane na instancjach testowych. 
+Aby jednak nie ograniczać się do zamkniętej puli testów, postanowiliśmy 
+napisać generator losowych instancji. 
+
+Generator instacji pozwala na wygenerowanie instacji tylko z błędami pozytywnymi
+lub tylko z błędami negatywnymi. W obu przypadkach parametry to:
+\begin{itemize}
+ \item wielkość spektrum idealnego $n$
+ \item ilość błędów $e$
+ \item długość oligonukleotydu $l$
+\end{itemize}
+
+Pierwszym krokiem wykorzystywanym przy generowaniu obu typów instacji jest stworzenie
+losowego łańcucha DNA o długości $k$, który nie zawiera błędów negatywnych (żaden 
+podciąg o długości $l$ się nie powtarza). Najprostrzym sposobem jest wygenerowanie 
+ciągu o długości $k$ składającego się z losowych lister A, C, T, G. Ponieważ możemy 
+założyć że $k$ będzie dużo mniejsze niż $4^l$ prawdopodobieństwo że tak wygenerowany
+ciąg będzie niepoprawny jest bardzo małe. Gdyby jednak okazało się że błąd wystąpił,
+nalęży uruchomić metodę od początku.
+
+Aby wygenerować ciąg którego spektrum idealne ma rozmiar $n$ z $e$ błedami pozytywnymi
+wystarczy wygenerować łańcuch DNA o długości $n+l-1$ i do tak utworzonego spektrum 
+dodać $e$ unikalnych oligonukleotydów.
+
+Wygenerowanie instancji z błędami negatywnymi jest jeszcze prostrze. Najpierw należy
+wygenerować łańcuch DNA o długości $n+e+l-1$, a następnie usunąć z tego spektrum
+$e$ losowych oligonukleotydów.
 
 \section{SBH z błędami pozytywnymi}
 Jak już wcześniej mówiliśmy, sekwencjonowanie łańcucha DNA z błędami pozytywnymi charakteryzuje się nadmiarową ilością słów otrzymanych w spektrum. Mamy więc pewność, że pośród tych słów znajdzie się dokładnie $n-l+1$ z których będziemy mogli zrekonstruować oryginalną sekwencję.
