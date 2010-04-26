@@ -31,9 +31,20 @@ Dla ułatwienia dalszego opisu wprowadźmy kilka terminów:
 %TODO więcej terminów?
 \begin{description}
   \item[Odległość między oligonukleotydami] definiuje się między każdą parą słów jako najmniejsze przesunięcie jednego oligonukletydu względem drugiego, które umożliwi połączenie ich w jeden łańcuch. Dla przykładu słowo $ACGTA$ znajduje się w odległości 2 względem słowa $ACACG$ (relacja w drugą stronę - słowo $ACACG$ znajduje się w odległości 4 względem słowa $ACGTA$).
-W zaproponowanych przez nas podejściach będziemy wykorzystywać teorię grafów w celu szybkiego łączenia oligonukleotydów oddalonych od siebie o jak najmniejszą wartość.
+%TODO
+%   A C A C G
+%       | | |
+%       A C G T A
+% Odleglłość między olignukleotydem ACACG a ACGTA
+
   \item[Spektrum] %TODO
+  \item[Sekwencja DNA] %TODO
+  \item[Błąd negatywny]
+  \item[Błąd pozytywny] 
+  \item[Graf DNA]
 \end{description}
+W zaproponowanych przez nas podejściach będziemy wykorzystywać teorię grafów w celu szybkiego łączenia oligonukleotydów oddalonych od siebie o jak najmniejszą wartość.
+
 W analizie problemu można wyróżnić cztery szczególne przypadki - idealny, z błędami negatywnymi, z błędami pozytywnymi, z obydwoma typami błędów.
 Przypadek idealny to taki, gdzie na mikromacierzy dopasowały się wszystkie słowa występujące w sekwencji.
 Mówimy, że dane odwzorowanie łańcucha DNA na mikromacierzy zawiera błędy negatywne, jeśli z jakiegoś powodu niektóre słowa nie zostały dopasowane do macierzy. Otrzymujemy więc niepełne spektrum sekwencji.
@@ -59,10 +70,12 @@ Algorytm 1:
 \end{enumerate}
 
 Złożoność powyższego algorytmu to $O(S + A + S * (S + A))$. Wynika to ze złożoności kolejnych jego kroków:
-- $O(S + A)$ dla punktu 1, gdzie liczba łuków jest zależna od słów tworzących spektrum i na pewno nie większa niż $S * (S-1) / 2$
-- $O(S + A)$ dla punktu 3
-- $O(S)$ dla punktu 4
-- $O(1)$ dla punktu 5
+\begin{itemize}
+ \item $O(S + A)$ dla punktu 1, gdzie liczba łuków jest zależna od słów tworzących spektrum i na pewno nie większa niż $S * (S-1) / 2$
+ \item $O(S + A)$ dla punktu 3
+ \item $O(S)$ dla punktu 4
+ \item $O(1)$ dla punktu 5
+\end{itemize}
 
 Mając do dyspozycji algorytm usuwania cykli w grafie proponujemy następujący algorytm rozwiązujący problem sekwencjonowania DNA z błędami pozytywnymi:
 
