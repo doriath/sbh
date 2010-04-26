@@ -194,14 +194,36 @@ Wszystkie poniższe wykresy i porównania zostały wygenerowane na zbiorze insta
 
 Algorytm ogólny został przetestowany zarówno na zbiorze instancji z błędami negatywnymi jak i zbiorze instancji z błędami pozytywnymi. Jako interesujące nas statystyki uwzględniliśmy procent wykorzystania słów znajdujących się w spektrum oraz liczbę popełnionych błędów (dodanych słów). Ponieważ dla danej liczy słów w spektrum istniało czasem po kilka instancji, dla takich przypadków uwzględnialiśmy wartość średnią interesującego nas parametru.
 
-\includegraphics{percentageUsedWords_general_positive.png}
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{percentageUsedWords_general_positive.png}
+ % \caption{}
+\end{figure}
+
 Jak widać na powyższym wykresie algorytm ten radzi sobie z błędami pozytywnymi bez problemów, dając za każdym razem wynik dokładny. Wynika to z charakterystyki tego typu instancji - zawsze można wyróżnić "główną ścieżkę" sekwencji, która musi stanowić po prostu rozwiązanie, a nasz algorytm takiej ścieżki właśnie szuka.
 
-\includegraphics{percentageUsedWords_general_negative.png}
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{percentageUsedWords_general_negative.png}
+ % \caption{}
+\end{figure}
+
 W przypadku instancji z błędami negatywnymi jest już nieco gorzej. W teorii wszystkie słowa wchodzące w skład spektrum powinny zostać wykorzystane. Nasz algorytm jest algorytmem zachłannym - skleja najkorzystniejsze w danej chwili dla niego sekwencji. Mając na uwadze to, że instancje składają się z prostych lasów grafowych, które w większości zawierają po prostu łańcuchy lub proste grafy, w pierwszym kroku następuje właśnie sklejenie tych łańcuchów. Gdyby nie ograniczenie na długość sekwencji wyjściowej, algorytm wykorzystywałby wszystkie słowa z instancji. Poniżej znajduje się wykres z długościami wyjściowych sekwencji jeśli pominiemy ograniczenie nałożone na długość sekwencji w zestawieniu z liczbą niewykorzystanych słów przez wersję algorytmu z tym ograniczeniem.
-\includegraphics{withoutNConstraint_general_negative.png}
+
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{withoutNConstraint_general_negative.png}
+ % \caption{}
+\end{figure}
+
 Wydaje się, że różnica jest dość uzasadniona - wersja algorytmu pilnująca długości sekwencji obcina po prostu w ostatnim kroku jedną z sekwencji o nadmiar znaków. Ten nadmiar znakowy przesunięty może być maksymalnie o 9 znaków (dla słów długości 10), więc ilość niewykorzystanych słów powinna być mniejsza o conajwyżej 9 względem odchylenia długości sekwencji od długości oczekiwanej w wersji algorytmu bez ograniczenia. I tak też się dzieje. Widać ponadto, że przy dużych wypełnieniach (ponad 90%) spektrum ta różnica wynosi 0 - ostatnie "doklejenie" odbywa się po prostu na łukach o wartości równej licznie nadmiarowych znaków w przypadku gdybyśmy nie posiadali ograniczenia na długość sekwencji . Dla przykładu jeśli doklejamy $TACGT$ z przesunięciem dwa do $GCTA%, i odcinamy nadmiar znaków równy 2, to w efekcie mamy sekwencję $GCTAC$. Odcięliśmy dwa znaki, z których mielibyśmy słowa $ACG$ oraz $CGT$.
-\includegraphics{unusedWords_general_negative.png}
+
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{unusedWords_general_negative.png}
+ % \caption{}
+\end{figure}
+
 Na wykresie obrazującym liczbę niewykorzystanych słów z instancji dla poszczególnych wielkości instancji widać, że nie są to duże braki. Zaznaczona na czarno linia trendu pokazuje, że średnio 12-13 słów jest niewykorzystanych, co daje dość dużą skuteczność algorytmu (ponad 90% jak wcześniej pokazano).
 
 \subsection{Algorytm 2}
@@ -211,23 +233,40 @@ Algorytm specyficzny dla problemów z błędami pozytywnymi jest tak naprawdę s
 \subsection{Algorytm 4}
 
 Algorytm specyficzny dla problemów z błędami negatywnymi jest zmodyfikowaną wersją algorytmu ogólnego. Różnią się one metodą wyznaczania wartości kosztów na łukach oraz rodzajem łuków najbardziej porządanych w rozwiązaniu (Algorytm 3 szuka najniższego kosztu, Algorytm 4 szuka najwyższego zysku). Mimo tak niewielkiej zmiany możemy zaobserwować na poniższym wykresie znaczny wzrost skuteczności algorytmu w wykorzystywaniu słów tworzących daną instancję.
-\includegraphics{percentageUsedWords_negative.png}
+
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{percentageUsedWords_negative.png}
+ % \caption{}
+\end{figure}
 
 Siłą rzeczy algorytm ten popełnia mało błędów. Jako błąd traktuje się niewykorzystanie słowa z instancji. W większości przypadków pomijane są góra 2 słowa. Jedynie dla instancji niemalże bezbłędnych, w których brakuje mniej niż 10 słów algorytm ma mniejsze pole do popisu i zostawia większą liczbę słów.
-\includegraphics{unusedWords_negative.png}
+
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{unusedWords_negative.png}
+ % \caption{}
+\end{figure}
 
 \subsection{Algorytm 2 kontra Algorytm 3}
 
-\includegraphics{timeDiff_general_vs_positive.png}
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{timeDiff_general_vs_positive.png}
+ % \caption{}
+\end{figure}
+
 Jak widać na powyższym wykresie istnieje minimalna różnica czasowa w działaniu tych dwóch algorytmów. Przypadek okrojony działa o tysięczne sekundy szybciej, ponieważ nie ma narzutu na sprawdzanie warunku stopu oraz nie są tworzone kilkukrotnie sekwencję z dotychczasowych rozwiązań. Jednak w związku z tak niewielkimi różnicami można powiedzieć, że algorytmy te są porównywalne dla zbioru instancji z błędami pozytywnymi.
 Gdybyśmy uruchomili algorytm dla instancji z błędami negatywnymi otrzymalibyśmy mierny wynik, ponieważ zostałby uwzględniony tylko jeden graf wchodzący w skład lasu grafów który jest badaną instancją.
 
 \subsection{Algorytm 4 kontra Algorytm 3}
 
-\includegraphics{percentageUsedWords_general_vs_negative.png}
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{percentageUsedWords_general_vs_negative.png}
+ % \caption{}
+\end{figure}
+
 Porównując z kolei algorytm dla błędów negatywnych względem algorytmu ogólnego od razu widzimy, że ten pierwszy jest lepszy - wykorzystuje bowiem średnio $98,97\%$ słów zadanej instancji! Jednak można zauważyć, że choć tak niewielka różnica w działaniu algorytmu ma wpływ dla instancji z dużą ilością brakujących słów, o tyle dla instancji w których brakuje mniej niż 20 słów wyniki są identyczne. Wynika to z tego, że główny "silnik" sklejania sekwencji jest w zasadzie identyczny, tj szuka najdłuższego możliwego łańcucha oligonukleotydów.
-
-\section{Bu}
-
 
 \end{document}
