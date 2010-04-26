@@ -63,8 +63,26 @@ adjacency_matrix create_adjacency_matrix(Instance &instance, int &min_level){
         for(int j = 0; j < n; j++)
 		{
             adjacency_matrix[i][j] = oligs[i].distance(oligs[j]);
-			if (i==j) adjacency_matrix[i][j] = min_level;
+			if (i==j) adjacency_matrix[i][j] = min_level + 1;
 			if (adjacency_matrix[i][j] < min_level) min_level = adjacency_matrix[i][j];
+		}
+	}
+    return adjacency_matrix;
+}
+
+adjacency_matrix create_adjacency_matrix_relative(Instance &instance, int &max_level){
+	max_level = 0;
+    vector<Olig> &oligs = instance.oligs;
+    int n = instance.oligs.size();
+    adjacency_matrix adjacency_matrix(n, vector<int>(n));
+
+    for(int i = 0; i < n; i++)
+	{
+        for(int j = 0; j < n; j++)
+		{
+            adjacency_matrix[i][j] = oligs[i].sequence.length() - oligs[i].distance(oligs[j]);
+			if (i==j) adjacency_matrix[i][j] = max_level - 1;
+			if (adjacency_matrix[i][j] > max_level) max_level = adjacency_matrix[i][j];
 		}
 	}
     return adjacency_matrix;

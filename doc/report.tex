@@ -150,6 +150,23 @@ $AGCTGTGACT$
 Algorytm zakończył swoje działanie. Zupełnie przypadkowo uzyskana sekwencja zgadza się z sekwencją wyjściową, mimo tego, że w ostatnim kroku algorytmu zostały sklejone słowa w sposób niekorzystny.
 Należy zauważyć, że znaczny wpływ na działanie algorytmu ma sposób wyboru wierzchołka w silnie spójnej składowej grafu z którego zostaną usunięte łuki, a także kolejność występowania wierzchołków w silnie spójnych składowych grafu. Jeśli na początku zamiast usuwać łuk z wierzchołka $TGT$ usunęlibyśmy dowolny inny łuk z tej silnie spójnej składowej grafu, to dalsze iteracje miałyby inny przebieg.
 
+\section{SBH negative}
+W algorytmie dla błędów pozytywnych korzystaliśmy z funkcji odległości dwóch łańcuchów tekstowych względem siebie. Było to możliwe dzięki temu, że porównywane łańcuchy miały tą samą długość. W przypadku algorytmu ogólnego, w którym również wykorzystujemy pojęcie odległości do konstrukcji łuków wkrada się pewna nieścisłość. Otóż porównywane są łańcuchy o różnych długościach. Jeśli więc mamy dwa łańcuchy S1=$AAAAAAA$ (długości 7 znaków) oraz S2=$GGGGGGGGAAA$ (długości 11 znaków), to zostanie utworzony łuk od S1 do S2 o koszcie 7, a w drugą stronę od S2 do S1 o koszcie 8. Zgodnie z algorytmem ogólnym uwzględniony zostanie łuk o niższym koszcie jako lepszy. Jak widać jest to złudne wrażenie, ponieważ łącząc elementy przy pomocy drugiego łuku aż trzy znaki pokryją się ze sobą, co oznacza, że będzie to lepsze połączenie de facto, bo utworzy krótszą sekwencję.
+Z powyższej obserwacji wynika, że należy zmodyfikować funkcję nadawania wartości łukom, aby uwzględniać relatywną liczbę powtarzających się znaków. W ten sposób tworzymy algorytm, który radzi sobie lepiej z instancjami zawierającymi błędy negatywne. Pogrubione zostały fragmenty, które uległy modyfikacji.
+
+Algorytm 4:
+1. Wczytaj zbiór wszystkich słów tworzących spektrum do słownika OLIGS
+2. Utwórz graf skierowany {\bf G}. Niech zbiór wierzchołków V stanowią słowa w słowniku OLIGS. Dla każdej pary wierzchołków $(i,j)$ dodaj łuk od wierzchołka $i$ do $j$ o koszcie równym {\bf różnicy długości słowa $i$ do odległości słowa w wierzchołku $j$ względem słowa w wierzchołku $i$}
+3. Znajdź {\bf najwyższy koszt łuku MAX} w grafie {\bf G}
+4. Utwórz graf skierowany {\bf G'}, który jest podgrafem grafu {\bf G} i zawiera tylko łuki o koszcie {\bf MAX}
+5. Usuń cykle w grafie {\bf G'} tworząc graf {\bf RES} korzystając z Algorytmu 1
+6. Uszereguj topologicznie {\bf RES}
+7. Wybierz najdłuższą możliwą ścieżkę {\bf PATH} w grafie {\bf RES}
+8. Usuń ze słownika OLIGS słowa wchodzące w skład ścieżki {\bf PATH}, w zamian dodając słowo utworzone przez połączenie słów zgodnie z kolejnością w ścieżce {\bf PATH}
+9. Jeśli słownik OLIGS zawiera dokładnie jedno słowo, to zakończ, w przeciwnym wypadku idź do punktu 2
+
+Powyższy algorytm posiada identyczną złożoność jak algorytm ogólny, działa jednak znacznie lepiej.
+
 \section{Wyniki}
 
 Wszystkie poniższe wykresy i porównania zostały wygenerowane na zbiorze instancji testowych. Należy przy tym zauważyć, że instancje z błędami pozytywnymi charakteryzują się tym, że można w nich wyróżnić jeden długi łańcuch, do którego czasem dochodzą lub wychodzą pojedyncze rozgałęzienia, tworząc czasem cykl. W przypadku instancji z błędami negatywnymi możemy wyróżnić kilka długich łańcuchów, które w najczęściej są w prosty sposób rozgałęzione. Zauważmy, że to, że dany łańcuch można idealnie "skleić" w całość nie oznacza, że jest to optymalne sklejenie. Może się bowiem tak zdarzyć, że brakujące słowa tworzyły cykl w grafie połączeń, co oczywiście zwiększa możliwość różnych kombinacji sekwencji z takiego łańcucha (inne symbole byłyby na początku i na końcu utworzonej sekwencji, przez co mogło istnieć lepsze dopasowanie).
@@ -170,11 +187,26 @@ Na wykresie obrazującym liczbę niewykorzystanych słów z instancji dla poszcz
 
 \subsection{Algorytm 2}
 
-Algorytm specyficzny dla problemów z błędami pozytywnymi jest tak nrapwdę szczególnym przypadkiem algorytmu ogólnego. Różnica polega na tym, że algorytm ten nie uwzględnia w ogóle łuków o kosztach wyższych niż jeden. Wynika to z obserwacji, że w instancji z błędami pozytywnymi (a więc z nadmiarem słów) musi istnieć ścieżka oparta o łuki o koszcie 1, która zawiera dokładnie $n$ wierzchołków. Algorytm ten poszukuje właśnie takiej ścieżki. Zauważmy, że wykres procentowego wykorzystania słów z instancji dla Algorytmu 2 wygląda identycznie jak analogiczny wykres dla Algorytmu 3. Jedynym sensownym porównaniem wydaje się być porównanie czasowe.
+Algorytm specyficzny dla problemów z błędami pozytywnymi jest tak naprawdę szczególnym przypadkiem algorytmu ogólnego. Różnica polega na tym, że algorytm ten nie uwzględnia w ogóle łuków o kosztach wyższych niż jeden. Wynika to z obserwacji, że w instancji z błędami pozytywnymi (a więc z nadmiarem słów) musi istnieć ścieżka oparta o łuki o koszcie 1, która zawiera dokładnie $n$ wierzchołków. Algorytm ten poszukuje właśnie takiej ścieżki. Zauważmy, że wykres procentowego wykorzystania słów z instancji dla Algorytmu 2 wygląda identycznie jak analogiczny wykres dla Algorytmu 3. Jedynym sensownym porównaniem wydaje się być porównanie czasowe.
+
+\subsection{Algorytm 4}
+
+Algorytm specyficzny dla problemów z błędami negatywnymi jest zmodyfikowaną wersją algorytmu ogólnego. Różnią się one metodą wyznaczania wartości kosztów na łukach oraz rodzajem łuków najbardziej porządanych w rozwiązaniu (Algorytm 3 szuka najniższego kosztu, Algorytm 4 szuka najwyższego zysku). Mimo tak niewielkiej zmiany możemy zaobserwować na poniższym wykresie znaczny wzrost skuteczności algorytmu w wykorzystywaniu słów tworzących daną instancję.
+\includegraphics{percentageUsedWords_negative.png}
+
+Siłą rzeczy algorytm ten popełnia mało błędów. Jako błąd traktuje się niewykorzystanie słowa z instancji. W większości przypadków pomijane są góra 2 słowa. Jedynie dla instancji niemalże bezbłędnych, w których brakuje mniej niż 10 słów algorytm ma mniejsze pole do popisu i zostawia większą liczbę słów.
+\includegraphics{unusedWords_negative.png}
+
+\subsection{Algorytm 2 kontra Algorytm 3}
 
 \includegraphics{timeDiff_general_vs_positive.png}
 Jak widać na powyższym wykresie istnieje minimalna różnica czasowa w działaniu tych dwóch algorytmów. Przypadek okrojony działa o tysięczne sekundy szybciej, ponieważ nie ma narzutu na sprawdzanie warunku stopu oraz nie są tworzone kilkukrotnie sekwencję z dotychczasowych rozwiązań. Jednak w związku z tak niewielkimi różnicami można powiedzieć, że algorytmy te są porównywalne dla zbioru instancji z błędami pozytywnymi.
 Gdybyśmy uruchomili algorytm dla instancji z błędami negatywnymi otrzymalibyśmy mierny wynik, ponieważ zostałby uwzględniony tylko jeden graf wchodzący w skład lasu grafów który jest badaną instancją.
+
+\subsection{Algorytm 4 kontra Algorytm 3}
+
+\includegraphics{percentageUsedWords_general_vs_negative.png}
+Porównując z kolei algorytm dla błędów negatywnych względem algorytmu ogólnego od razu widzimy, że ten pierwszy jest lepszy - wykorzystuje bowiem średnio $98,97\%$ słów zadanej instancji! Jednak można zauważyć, że choć tak niewielka różnica w działaniu algorytmu ma wpływ dla instancji z dużą ilością brakujących słów, o tyle dla instancji w których brakuje mniej niż 20 słów wyniki są identyczne. Wynika to z tego, że główny "silnik" sklejania sekwencji jest w zasadzie identyczny, tj szuka najdłuższego możliwego łańcucha oligonukleotydów.
 
 \section{Bu}
 
