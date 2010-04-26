@@ -31,11 +31,18 @@ Dla ułatwienia dalszego opisu wprowadźmy kilka terminów:
 %TODO więcej terminów?
 \begin{description}
   \item[Odległość między oligonukleotydami] definiuje się między każdą parą słów jako najmniejsze przesunięcie jednego oligonukletydu względem drugiego, które umożliwi połączenie ich w jeden łańcuch. Dla przykładu słowo $ACGTA$ znajduje się w odległości 2 względem słowa $ACACG$ (relacja w drugą stronę - słowo $ACACG$ znajduje się w odległości 4 względem słowa $ACGTA$).
-%TODO
-%   A C A C G
-%       | | |
-%       A C G T A
-% Odleglłość między olignukleotydem ACACG a ACGTA
+
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{Distance1.png}
+ % \caption{}
+\end{figure}
+
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{Distance2.png}
+ % \caption{}
+\end{figure}
 
   \item[Spektrum] %TODO
   \item[Sekwencja DNA] %TODO
@@ -125,12 +132,11 @@ Dane wejściowe:
 $OLIGS = { AGC, GCT, CTG, TGT, GTG, TGA, GAC, ACT }$
 $n = 10$
 
-%               ----------------------
-%               |                    v
-%AGC -> GCT -> CTG -> TGT -> GTG -> TGA -> GAC -> ACT
-%               ^      ^      |                    |
-%               |      --------                    |
-%               ------------------------------------
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{Graph1.png}
+ % \caption{}
+\end{figure}
 
 Powyżej zaprezentowano graf utworzony w kroku 4 dla wartości $MIN=1$. Wcześniejsze kroki są jednoznacznie interpretowalne, a utworzenie pełnego grafu z punktu 2 bardzo zamgliłoby obraz grafu. Usuńmy teraz cykle.
 Jak widać w powyższym grafie mamy następujące silnie spójne składowe:
@@ -148,10 +154,11 @@ $E$ - {GTG}
 Ponieważ znów mamy silnie spójną składową, która ma więcej niż jeden wierzchołek, to z niej będziemy usuwać cykl. Tym razem jednak po uszeregowaniu topologicznie silnie spójnych składowych otrzymujemy zależność $A->B->C->D->E$. Oznacza to, że w silnie spójnej składowej C musimy odnaleźć wierzchołek prowadzący do silnie spójnej składowej $D$. Takim wierzchołkiem jest $CTG$, usuwamy więc z niego wszystkie łuki wychodzące z niego, które prowadzą do innych wierzchołków silnie spójnej składowej $C$. Zostanie usunięty łuk $CTG->TGA$.
 W kolejnej iteracji podziału na silnie spójne składowe uzyskamy siedem jedno-elementowych zbiorów, a więc usuwanie cykli możemy zakończyć. Po wykonaniu powyższych operacji graf wygląda następująco:
 
-%AGC -> GCT -> CTG -> TGT    GTG -> TGA -> GAC -> ACT
-%               ^      ^      |                    |
-%               |      --------                    |
-%               ------------------------------------
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{Graph2.png}
+ % \caption{}
+\end{figure}
 
 Po uszeregowaniu topologicznie możemy uzyskać m.in. następującą kolejność wierzchołków:
 $AGC, GCT, GTG, TGA, GAC, ACT, CTG, TGT$
@@ -160,18 +167,20 @@ $GTG, TGA, GAC, ACT, CTG, TGT$
 I tworzymy nowe słowo sklejając poszczególne elementy ze sobą w sekwencję $GTGACTGT$.
 Usuwamy wierzchołki, z których utworzyliśmy powyższą sekwencją. Dodajemy otrzymaną sekwencję do grafu, który obecnie wygląda następująco:
 
-AGC -> GCT         GTGACTGT
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{Graph3.png}
+ % \caption{}
+\end{figure}
 
 Uwzględnione są tylko łuki o koszcie $MIN=1$ (czyli niejako uzyskaliśmy las grafów). Ponieważ nie ma tu silnie spójnych składowych możemy przystąpić do łączenia elementów. Najdłuższą ścieżką jest $AGC, GCT$ (liczy się ilość wierzchołków wchodzących w skład ścieżki, nie łączna długość słów!), zatem tą sekwencję łączymy i dodajemy do grafu usuwając wykorzystane do jej utworzenia wierzchołki.
 Otrzymujemy wówczas poniższy graf:
 
-%         4
-%  ----------------
-%  |              v
-%AGCT          GTGACTGT
-%  \^              |
-%  ----------------
-%         8
+\begin{figure}[h]
+  \footnotesize\centering
+  \includegraphics[width=\textwidth,keepaspectratio]{Graph4.png}
+ % \caption{}
+\end{figure}
 		 
 Jest to graf pełny, nad łukami zaznaczono ich koszty. Ponieważ najniższym kosztem jest $MIN=4$, oznacza to, że nie istnieje już żadne bezpośrednie połączenie, musimy połączyć te sekwencje "grubymi nićmi" aby utworzyć sekwencję końcową:
 $AGCTGTGACTGT$
