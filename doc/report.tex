@@ -70,7 +70,7 @@ napisać generator losowych instancji.
 Generator instacji pozwala na wygenerowanie instacji tylko z błędami pozytywnymi
 lub tylko z błędami negatywnymi. W obu przypadkach parametry to:
 \begin{itemize}
- \item wielkość spektrum idealnego $n$
+ \item wielkość spektrum idealnego $|S|$
  \item ilość błędów $e$
  \item długość oligonukleotydu $l$
 \end{itemize}
@@ -83,12 +83,12 @@ założyć że $k$ będzie dużo mniejsze niż $4^l$ prawdopodobieństwo że tak
 ciąg będzie niepoprawny jest bardzo małe. Gdyby jednak okazało się że błąd wystąpił,
 nalęży uruchomić metodę od początku.
 
-Aby wygenerować ciąg którego spektrum idealne ma rozmiar $n$ z $e$ błedami pozytywnymi
-wystarczy wygenerować łańcuch DNA o długości $n+l-1$ i do tak utworzonego spektrum 
+Aby wygenerować ciąg którego spektrum idealne ma rozmiar $|S|$ z $e$ błedami pozytywnymi
+wystarczy wygenerować łańcuch DNA o długości $|S|+l-1$ i do tak utworzonego spektrum 
 dodać $e$ unikalnych oligonukleotydów.
 
 Wygenerowanie instancji z błędami negatywnymi jest jeszcze prostrze. Najpierw należy
-wygenerować łańcuch DNA o długości $n+e+l-1$, a następnie usunąć z tego spektrum
+wygenerować łańcuch DNA o długości $|S|+e+l-1$, a następnie usunąć z tego spektrum
 $e$ losowych oligonukleotydów.
 
 \section{SBH z błędami pozytywnymi}
