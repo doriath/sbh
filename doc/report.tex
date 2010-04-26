@@ -1,24 +1,25 @@
-\documentclass[a4paper]{article}
-\usepackage[polish]{babel}
-\usepackage[T1]{fontenc}
+\documentclass[a4paper,10pt]{article}
+\usepackage[pdftex]{graphicx}
+\usepackage{polski}
 \usepackage[utf8]{inputenc}
-\usepackage{amsfonts}
-\usepackage{amsthm}
-\usepackage{amsmath}
-\usepackage{graphicx}
 \usepackage{textcomp}
+\usepackage{pifont}
 \usepackage{color}
-\usepackage{multirow}
-\usepackage{graphics}
 \usepackage{listings}
 
-\newtheorem{theorem}{Twierdzenie}
+% opcje listingów
+\definecolor{darkgray}{rgb}{0.95,0.95,0.95}
+\lstset{language=c++}
+\lstset{backgroundcolor=\color{darkgray}}
 
-\title{Biologia obliczeniowa}
-\author{Mateusz Cicheński (84780 gr.I1) \\ Tomasz Żurkowski (84915 gr.I1)}
+\title{\textbf{Biologia obliczeniowa}}
+\author{\textbf{Mateusz Cicheński} [84780, I1]\\ \textbf{Tomasz Żurkowski} [84915, I1]}
+\date{24 kwietnia 2010 r.}
 
 \begin{document}
+ 
 \maketitle
+
 \tableofcontents
 
 \newpage
@@ -83,12 +84,12 @@ Dane wejściowe:
 $OLIGS = { AGC, GCT, CTG, TGT, GTG, TGA, GAC, ACT }$
 $n = 10$
 
-               ----------------------
-               |                    v
-AGC -> GCT -> CTG -> TGT -> GTG -> TGA -> GAC -> ACT
-               ^      ^      |                    |
-               |      --------                    |
-               ------------------------------------
+%               ----------------------
+%               |                    v
+%AGC -> GCT -> CTG -> TGT -> GTG -> TGA -> GAC -> ACT
+%               ^      ^      |                    |
+%               |      --------                    |
+%               ------------------------------------
 
 Powyżej zaprezentowano graf utworzony w kroku 4 dla wartości $MIN=1$. Wcześniejsze kroki są jednoznacznie interpretowalne, a utworzenie pełnego grafu z punktu 2 bardzo zamgliłoby obraz grafu. Usuńmy teraz cykle.
 Jak widać w powyższym grafie mamy następujące silnie spójne składowe:
@@ -106,10 +107,10 @@ $E$ - {GTG}
 Ponieważ znów mamy silnie spójną składową, która ma więcej niż jeden wierzchołek, to z niej będziemy usuwać cykl. Tym razem jednak po uszeregowaniu topologicznie silnie spójnych składowych otrzymujemy zależność $A->B->C->D->E$. Oznacza to, że w silnie spójnej składowej C musimy odnaleźć wierzchołek prowadzący do silnie spójnej składowej $D$. Takim wierzchołkiem jest $CTG$, usuwamy więc z niego wszystkie łuki wychodzące z niego, które prowadzą do innych wierzchołków silnie spójnej składowej $C$. Zostanie usunięty łuk $CTG->TGA$.
 W kolejnej iteracji podziału na silnie spójne składowe uzyskamy siedem jedno-elementowych zbiorów, a więc usuwanie cykli możemy zakończyć. Po wykonaniu powyższych operacji graf wygląda następująco:
 
-AGC -> GCT -> CTG -> TGT    GTG -> TGA -> GAC -> ACT
-               ^      ^      |                    |
-               |      --------                    |
-               ------------------------------------
+%AGC -> GCT -> CTG -> TGT    GTG -> TGA -> GAC -> ACT
+%               ^      ^      |                    |
+%               |      --------                    |
+%               ------------------------------------
 
 Po uszeregowaniu topologicznie możemy uzyskać m.in. następującą kolejność wierzchołków:
 $AGC, GCT, GTG, TGA, GAC, ACT, CTG, TGT$
@@ -123,13 +124,13 @@ AGC -> GCT         GTGACTGT
 Uwzględnione są tylko łuki o koszcie $MIN=1$ (czyli niejako uzyskaliśmy las grafów). Ponieważ nie ma tu silnie spójnych składowych możemy przystąpić do łączenia elementów. Najdłuższą ścieżką jest $AGC, GCT$ (liczy się ilość wierzchołków wchodzących w skład ścieżki, nie łączna długość słów!), zatem tą sekwencję łączymy i dodajemy do grafu usuwając wykorzystane do jej utworzenia wierzchołki.
 Otrzymujemy wówczas poniższy graf:
 
-         4
-  ----------------
-  |              v
-AGCT          GTGACTGT
-  ^              |
-  ----------------
-         8
+%         4
+%  ----------------
+%  |              v
+%AGCT          GTGACTGT
+%  \^              |
+%  ----------------
+%         8
 		 
 Jest to graf pełny, nad łukami zaznaczono ich koszty. Ponieważ najniższym kosztem jest $MIN=4$, oznacza to, że nie istnieje już żadne bezpośrednie połączenie, musimy połączyć te sekwencje "grubymi nićmi" aby utworzyć sekwencję końcową:
 $AGCTGTGACTGT$

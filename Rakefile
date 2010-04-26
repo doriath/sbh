@@ -24,6 +24,12 @@ task :default => :compile
 desc "Compile all source files"
 task :compile => TARGETS 
 
+desc "Generate report"
+task :report => "doc/report.tex" do
+  2.times do 
+    break unless system('cd doc; pdflatex -halt-on-error report.tex') 
+  end
+end
 
 desc "Run sbh positive for all input files"
 task :positive => "bin/sbh_positive" do
