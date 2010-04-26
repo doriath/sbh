@@ -6,6 +6,7 @@
 \usepackage{pifont}
 \usepackage{color}
 \usepackage{listings}
+\usepackage{amsfonts}
 
 % opcje listingów
 \definecolor{darkgray}{rgb}{0.95,0.95,0.95}
@@ -26,33 +27,28 @@
 
 \section{Wprowadzenie do zagadnienia}
 
-Problem sekwencjonowania łańcuchów DNA jest w ogólności problemem silnie NP-trudnym. W problemie tym mamy dany zbiór {\bf S} słów (oligonukleotydów) o jednakowej długości {\bf l} nad alfabetem {\bf \{A, C, G, T\}}. Ponadto mamy podaną długość sekwencji oryginalnej {\bf n}. Celem sekwencjonowania jest odtworzenie oryginalnego łańcucha DNA, który został poddany hybrydyzacji, na podstawie powyżej zdefiniowanych danych wejściowych.
+Problem sekwencjonowania łańcuchów DNA jest w ogólności problemem silnie NP-trudnym. W problemie tym mamy dany zbiór (spektrum) $\mathbb{S}$ słów (oligonukleotydów) o jednakowej długości $l$ nad alfabetem $\{A, C, G, T\}$. Ponadto mamy podaną długość sekwencji oryginalnej $n$. Celem sekwencjonowania jest odtworzenie oryginalnego łańcucha DNA, który został poddany hybrydyzacji, na podstawie powyżej zdefiniowanych danych wejściowych.
 Dla ułatwienia dalszego opisu wprowadźmy kilka terminów: 
-%TODO więcej terminów?
 \begin{description}
+  \item[Oligonukleotyd] fragment kwasu nukleinowego długości od kilku do kilkunastu nukleotydów (słowo o długości $l$ nad alfabetem $\{A, C, G, T\}$)
+  \item[Spektrum] zbior $\mathbb{S}$ oligonukleotydów
+  \item[Sekwencja DNA] słowo o długości $n$ nad alfabetem $\{A, C, G, T\}$
+  \item[Błąd negatywny] w spektrum nie ma niektórych oligonukleotydów
+  \item[Błąd pozytywny] w spektrum znajdują się dodatkowe oligonukleotydy
   \item[Odległość między oligonukleotydami] definiuje się między każdą parą słów jako najmniejsze przesunięcie jednego oligonukletydu względem drugiego, które umożliwi połączenie ich w jeden łańcuch. Dla przykładu słowo $ACGTA$ znajduje się w odległości 2 względem słowa $ACACG$ (relacja w drugą stronę - słowo $ACACG$ znajduje się w odległości 4 względem słowa $ACGTA$).
 
-\begin{figure}[h]
-  \footnotesize\centering
-  \includegraphics[width=\textwidth,keepaspectratio]{Distance1.png}
- % \caption{}
-\end{figure}
+  \begin{figure}[h]
+    \footnotesize\centering
+    \includegraphics[width=0.8\textwidth,keepaspectratio]{Distance1.png}
+  \end{figure}
 
-\begin{figure}[h]
-  \footnotesize\centering
-  \includegraphics[width=\textwidth,keepaspectratio]{Distance2.png}
- % \caption{}
-\end{figure}
-
-  \item[Spektrum] %TODO
-  \item[Sekwencja DNA] %TODO
-  \item[Błąd negatywny] %TODO
-  \item[Błąd pozytywny] %TODO
-  \item[Graf DNA] %TODO
-
-
-
+  \begin{figure}[h]
+    \footnotesize\centering
+    \includegraphics[width=0.8\textwidth,keepaspectratio]{Distance2.png}
+  \end{figure}
+  \item[Graf DNA] skierowany graf w którym wierzchołkami są oligonukleotydy, a krawędzie odpowiadają odległością między nimi (zdefiniowana powyżej)
 \end{description}
+
 W zaproponowanych przez nas podejściach będziemy wykorzystywać teorię grafów w celu szybkiego łączenia oligonukleotydów oddalonych od siebie o jak najmniejszą wartość.
 
 W analizie problemu można wyróżnić cztery szczególne przypadki - idealny, z błędami negatywnymi, z błędami pozytywnymi, z obydwoma typami błędów.
@@ -60,7 +56,7 @@ Przypadek idealny to taki, gdzie na mikromacierzy dopasowały się wszystkie sł
 Mówimy, że dane odwzorowanie łańcucha DNA na mikromacierzy zawiera błędy negatywne, jeśli z jakiegoś powodu niektóre słowa nie zostały dopasowane do macierzy. Otrzymujemy więc niepełne spektrum sekwencji.
 Błędami pozytywnymi określamy nadmiar informacji, tzn. na mikromacierzy zostały dopasowane słowa, które nie występują w sekwencji oryginalnej. Mamy więc zbiór słów które są nadzbiorem zbioru słów wchodzących w skład oryginalnej sekwencji.
 
-%TODO założenie że n << 4^l
+Przy projektowaniu heurystyk do problemu SBH założyliśmy że $n << 4^l$.
 
 \section{Generowanie losowych instancji}
 Wszystkie algorytmy heurystyczne były sprawdzane na instancjach testowych. 
