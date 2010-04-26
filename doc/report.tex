@@ -150,6 +150,7 @@ W przypadku podejścia ogólnego nie mamy gwarancji, że istnieje ścieżka po �
 Musimy więc uwzględnić mniej korzystne połączenia o kosztach 2 i wyższych. W związku z tym wykorzystamy algorytm sekwencjonowania z błędami 
 pozytywnymi uogólniając jego działanie. Algorytm po modyfikacji wygląda następująco:
 
+Algorytm 3
 \begin{enumerate}
  \item Wczytaj zbiór wszystkich słów tworzących spektrum do słownika \texttt{OLIGS}
  \item Utwórz graf skierowany $G$. Niech zbiór wierzchołków $V$ stanowią słowa w słowniku OLIGS. Dla każdej pary wierzchołków $(i,j)$ dodaj 
@@ -252,6 +253,7 @@ Należy zauważyć, że znaczny wpływ na działanie algorytmu ma sposób wyboru
 W algorytmie dla błędów pozytywnych korzystaliśmy z funkcji odległości dwóch łańcuchów tekstowych względem siebie. Było to możliwe dzięki temu, że porównywane łańcuchy miały tą samą długość. W przypadku algorytmu ogólnego, w którym również wykorzystujemy pojęcie odległości do konstrukcji łuków wkrada się pewna nieścisłość. Otóż porównywane są łańcuchy o różnych długościach. Jeśli więc mamy dwa łańcuchy S1=$AAAAAAA$ (długości 7 znaków) oraz S2=$GGGGGGGGAAA$ (długości 11 znaków), to zostanie utworzony łuk od S1 do S2 o koszcie 7, a w drugą stronę od S2 do S1 o koszcie 8. Zgodnie z algorytmem ogólnym uwzględniony zostanie łuk o niższym koszcie jako lepszy. Jak widać jest to złudne wrażenie, ponieważ łącząc elementy przy pomocy drugiego łuku aż trzy znaki pokryją się ze sobą, co oznacza, że będzie to lepsze połączenie de facto, bo utworzy krótszą sekwencję.
 Z powyższej obserwacji wynika, że należy zmodyfikować funkcję nadawania wartości łukom, aby uwzględniać relatywną liczbę powtarzających się znaków. W ten sposób tworzymy algorytm, który radzi sobie lepiej z instancjami zawierającymi błędy negatywne. Pogrubione zostały fragmenty, które uległy modyfikacji.
 
+Algorytm 4
 \begin{enumerate}
  \item Wczytaj zbiór wszystkich słów tworzących spektrum do słownika \texttt{OLIGS}
  \item Utwórz graf skierowany $G$. Niech zbiór wierzchołków \texttt{V} stanowią słowa w słowniku \texttt{OLIGS}. 
