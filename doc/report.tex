@@ -27,15 +27,21 @@
 \section{Wprowadzenie do zagadnienia}
 
 Problem sekwencjonowania łańcuchów DNA jest w ogólności problemem silnie NP-trudnym. W problemie tym mamy dany zbiór {\bf S} słów (oligonukleotydów) o jednakowej długości {\bf l} nad alfabetem {\bf \{A, C, G, T\}}. Ponadto mamy podaną długość sekwencji oryginalnej {\bf n}. Celem sekwencjonowania jest odtworzenie oryginalnego łańcucha DNA, który został poddany hybrydyzacji, na podstawie powyżej zdefiniowanych danych wejściowych.
-Dla ułatwienia dalszego opisu wprowadźmy kilka terminów: odległość między oligonukleotydami.
+Dla ułatwienia dalszego opisu wprowadźmy kilka terminów: 
 %TODO więcej terminów?
-Odległość między oligonukleotydami definiuje się między każdą parą słów jako najmniejsze przesunięcie jednego oligonukletydu względem drugiego, które umożliwi połączenie ich w jeden łańcuch. Dla przykładu słowo $ACGTA$ znajduje się w odległości 2 względem słowa $ACACG$ (relacja w drugą stronę - słowo $ACACG$ znajduje się w odległości 4 względem słowa $ACGTA$).
+\begin{description}
+  \item[Odległość między oligonukleotydami] definiuje się między każdą parą słów jako najmniejsze przesunięcie jednego oligonukletydu względem drugiego, które umożliwi połączenie ich w jeden łańcuch. Dla przykładu słowo $ACGTA$ znajduje się w odległości 2 względem słowa $ACACG$ (relacja w drugą stronę - słowo $ACACG$ znajduje się w odległości 4 względem słowa $ACGTA$).
 W zaproponowanych przez nas podejściach będziemy wykorzystywać teorię grafów w celu szybkiego łączenia oligonukleotydów oddalonych od siebie o jak najmniejszą wartość.
-
+  \item[Spektrum] %TODO
+\end{description}
 W analizie problemu można wyróżnić cztery szczególne przypadki - idealny, z błędami negatywnymi, z błędami pozytywnymi, z obydwoma typami błędów.
 Przypadek idealny to taki, gdzie na mikromacierzy dopasowały się wszystkie słowa występujące w sekwencji.
 Mówimy, że dane odwzorowanie łańcucha DNA na mikromacierzy zawiera błędy negatywne, jeśli z jakiegoś powodu niektóre słowa nie zostały dopasowane do macierzy. Otrzymujemy więc niepełne spektrum sekwencji.
 Błędami pozytywnymi określamy nadmiar informacji, tzn. na mikromacierzy zostały dopasowane słowa, które nie występują w sekwencji oryginalnej. Mamy więc zbiór słów które są nadzbiorem zbioru słów wchodzących w skład oryginalnej sekwencji.
+
+\section{Generowanie losowych instancji SBH}
+
+%TODO Tutaj o generowaniu instancji ...
 
 \section{SBH z błędami pozytywnymi}
 Jak już wcześniej mówiliśmy, sekwencjonowanie łańcucha DNA z błędami pozytywnymi charakteryzuje się nadmiarową ilością słów otrzymanych w spektrum. Mamy więc pewność, że pośród tych słów znajdzie się dokładnie $n-l+1$ z których będziemy mogli zrekonstruować oryginalną sekwencję.
