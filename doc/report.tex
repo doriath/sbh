@@ -34,10 +34,10 @@ który został poddany hybrydyzacji, na podstawie powyżej zdefiniowanych danych
 Dla ułatwienia dalszego opisu wprowadźmy kilka terminów: 
 \begin{description}
   \item[Oligonukleotyd] fragment kwasu nukleinowego długości od kilku do kilkunastu nukleotydów (słowo o długości $l$ nad alfabetem $\{A, C, G, T\}$)
-  \item[Spektrum] zbior $\mathbb{S}$ oligonukleotydów
+  \item[Spektrum] zbiór $\mathbb{S}$ oligonukleotydów
   \item[Sekwencja DNA] słowo o długości $n$ nad alfabetem $\{A, C, G, T\}$
-  \item[Błąd negatywny] w spektrum nie ma niektórych oligonukleotydów
-  \item[Błąd pozytywny] w spektrum znajdują się dodatkowe oligonukleotydy
+  \item[Błąd negatywny] występuje gdy w spektrum nie ma niektórych oligonukleotydów
+  \item[Błąd pozytywny] występuje gdy w spektrum znajdują się dodatkowe oligonukleotydy
   \item[Odległość między oligonukleotydami] definiuje się między każdą parą słów jako najmniejsze przesunięcie jednego oligonukletydu
                                             względem drugiego, które umożliwi połączenie ich w jeden łańcuch. Dla przykładu słowo $ACGTA$
                                             znajduje się w odległości 2 względem słowa $ACACG$ (relacja w drugą stronę - słowo $ACACG$ 
@@ -81,13 +81,13 @@ lub tylko z błędami negatywnymi. W obu przypadkach parametry to:
 
 Pierwszym krokiem wykorzystywanym przy generowaniu obu typów instacji jest stworzenie
 losowego łańcucha DNA o długości $k$, który nie zawiera błędów negatywnych (żaden 
-podciąg o długości $l$ się nie powtarza). Najprostrzym sposobem jest wygenerowanie 
+podciąg o długości $l$ się nie powtarza). Najprostszym sposobem jest wygenerowanie 
 ciągu o długości $k$ składającego się z losowych liter A, C, T, G. Ponieważ możemy 
 założyć że $k$ będzie dużo mniejsze niż $4^l$ prawdopodobieństwo że tak wygenerowany
 ciąg będzie niepoprawny jest bardzo małe. Gdyby jednak okazało się że błąd wystąpił,
-nalęży uruchomić metodę od początku.
+należy uruchomić metodę od początku.
 
-Aby wygenerować ciąg którego spektrum idealne ma rozmiar $|S|$ z $e$ błedami pozytywnymi
+Aby wygenerować ciąg którego spektrum idealne ma rozmiar $|S|$ z $e$ błędami pozytywnymi
 wystarczy wygenerować łańcuch DNA o długości $|S|+l-1$ i do tak utworzonego spektrum 
 dodać $e$ unikalnych oligonukleotydów.
 
@@ -102,7 +102,7 @@ nadmiarową ilością słów otrzymanych w spektrum. Mamy więc pewność, że p
 Pierwszym krokiem jest zbudowanie grafu DNA $G$ który zawiera tylko łuki o wadze 1. Graf taki posiada dokładnie $|S|$ wierzchołków a ilość krawędzi jest mniejsza niż $4 \cdot |S|$.
 Gdy graf $G$ jest grafem acyklicznym, wtedy używając sortowania topologicznego oraz programowania dynamicznego możemy dla każdego wierzchołka $u$ wyliczyć 
 najdłuższą ścieżkę zaczynającą się w tym wierzchołku - oznaczmy ją przez $distance[u]$. Taką tablicę można wyliczyć w $O(|S|)$. Używając tej tablicy 
-możemy znaleść najdłuższą ściężkę w grafie $G$ która jest zarazem optymalnym rozwiązaniem dla problemu SBH z błędami pozytywnymi.
+możemy znaleźć najdłuższą ścieżkę w grafie $G$ która jest zarazem optymalnym rozwiązaniem dla problemu SBH z błędami pozytywnymi.
 
 Gdy graf nie jest acykliczny, nasza heurystyka usuwa krawędzie używając poniższego algorytmu:
 
@@ -115,21 +115,21 @@ Algorytm 1
  \item Posortuj graf $G_{SCC}$ topologicznie
  \item Znajdź pierwszą silnie spójną składową $SCC$ (w kolejności sortowania topologicznego) która zawiera więcej niż jeden wierzchołek
  \item Dla danej silnie spójnej składowej $SCC$ znajdź należący do niej wierzchołek $k$, który łączy się z wierzchołkiem $v$ z 
-       innej silnie spójnej składowej o największej wartośći $distance[v]$
+       innej silnie spójnej składowej o największej wartości $distance[v]$
  \item Usuń wszystkie połączenia wychodzące z $k$, które łączą się z innymi wierzchołkami wchodzącymi w skład $SCC$
  \item Wróć do 1
 \end{enumerate}
 
 Wykonanie jednej iteracji tego algorytmu (aż do punktu 8) wymaga $O(|S|)$ operacji. W każdej
-iteracji usuwana jest przynajmniej jedna krawedź w grafie, a więc maksymalnie wykonamy $O(|S|)$ iteracji. Stąd ostateczna złożoność powyższego
+iteracji usuwana jest przynajmniej jedna krawędź w grafie, a więc maksymalnie wykonamy $O(|S|)$ iteracji. Stąd ostateczna złożoność powyższego
 algorytmu to $O(|S|^2)$.
 
 Mając do dyspozycji algorytm usuwania cykli w grafie proponujemy następujący algorytm rozwiązujący problem sekwencjonowania DNA z błędami pozytywnymi:
 
 Algorytm 2
 \begin{enumerate}
- \item Utwórz graf skierowany $G$. Niech zbiór wierzchołków V stanowią słowa tworzące spektrum sekwencji DNA. Dla każdej pary 
- wierzchołków $(i,j)$ dodaj łuk od wierzchołka $i$ do $j$ wtw gdy słowo w wierzchołku $j$ jest oddalone o 1 od słowa w wierzchołku $i$
+ \item Utwórz graf skierowany $G$. Niech zbiór wierzchołków $V$ stanowią słowa tworzące spektrum sekwencji DNA. Dla każdej pary 
+ wierzchołków $(i,j)$ dodaj łuk od wierzchołka $i$ do $j$ $\iff$ gdy słowo w wierzchołku $j$ jest oddalone o 1 od słowa w wierzchołku $i$
  \item Usuń cykle w grafie $G$ tworząc graf $G_{DAG}$ korzystając z powyższego algorytmu
  \item Uszereguj topologicznie $G_{DAG}$
  \item Wybierz najdłuższą możliwą ścieżkę w grafie $G_{DAG}$
@@ -138,7 +138,7 @@ Algorytm 2
 Złożoność poszczególnych kroków algorytmu jest następująca:
 \begin{itemize}
  \item $O(|S|^2)$ dla punktu 1
- \item $O(|S|^2)$ dla punkut 2
+ \item $O(|S|^2)$ dla punktu 2
  \item $O(|S|)$ dla punktu 3
  \item $O(|S|)$ dla punktu 4
 \end{itemize}
@@ -164,11 +164,11 @@ Algorytm 3
  \item Jeśli słownik \texttt{OLIGS} zawiera dokładnie jedno słowo, to zakończ, w przeciwnym wypadku idź do punktu 2
 \end{enumerate}
 
-Z punktu widzenia złożoności należy zauważyć, że punkt 3 można zrealizować w ramach punktu 2. Zauważmy ponadto, że punkty od 4 do 7 to dokładnie algorytm dla przypadku błedów pozytywnych, 
+Z punktu widzenia złożoności należy zauważyć, że punkt 3 można zrealizować w ramach punktu 2. Zauważmy ponadto, że punkty od 4 do 7 to dokładnie algorytm dla przypadku błędów pozytywnych, 
 z uwzględnieniem łuków o koszcie MIN (zamiast o koszcie 1 jak podano w poprzednim algorytmie). Złożoności pozostałych punktów to:
 \begin{itemize}
  \item $O(S^2)$ dla punktu 2
- \item $O(1)$ dla usuwania w punkcie 8, tworzenie słowa jest liniowo od ilości oligonukleotydów, które wchodzą w jego skład
+ \item $O(1)$ dla usuwania w punkcie 8, tworzenie słowa jest liniowo zależne od ilości oligonukleotydów, które wchodzą w jego skład
 \end{itemize}
 W związku z tym ostateczna złożoność algorytmu to $O(|S|^3)$. Przy czym $|S|^3$ występuje w najgorszym wypadku, 
 kiedy w grafie wyjściowym będziemy mieć słowa o długości równej liczbie słów instancji i będą istnieć tylko pojedyncze połączenia o kosztach $1, 2, 3, ..., S$.
@@ -186,14 +186,15 @@ $$n = 10$$
   \includegraphics[width=\textwidth,keepaspectratio]{Graph1.png}
 \end{figure}
 
-Powyżej zaprezentowano graf utworzony w kroku 4 dla wartości $MIN=1$. Wcześniejsze kroki są jednoznacznie interpretowalne, a utworzenie pełnego grafu z punktu 2 bardzo zamgliłoby obraz grafu. Usuńmy teraz cykle.
+Powyżej zaprezentowano graf utworzony w kroku 4 dla wartości $MIN=1$. Wcześniejsze kroki są jednoznacznie interpretowalne, 
+a utworzenie pełnego grafu z punktu 2 bardzo zamgliłoby obraz grafu. Usuńmy teraz cykle.
 Jak widać w powyższym grafie mamy następujące silnie spójne składowe:
 \begin{itemize}
  \item $A$ - {AGC}
  \item $B$ - {GCT}
  \item $C$ - {CTG, TGT, GTG, TGA, GAC, ACT}
 \end{itemize}
-Musimy więc rozbić wszystkie silnie spójne składowe usuwając cykle, co umożliwi nam utworzenie nadłuższej możliwej ścieżki od ustalonego punktu.
+Musimy więc rozbić wszystkie silnie spójne składowe usuwając cykle, co umożliwi nam utworzenie najdłuższej możliwej ścieżki od ustalonego punktu.
 Uzyskaliśmy tylko jedną silnie spójną składową $C$, która posiada więcej niż jeden wierzchołek, więc ją należy rozbić. 
 Zauważmy, że po uszeregowaniu topologicznie spójnych składowych uzyskamy następujące uporządkowanie: $A \rightarrow B \rightarrow C$, 
 a więc bierzemy pierwszy lepszy wierzchołek silnie spójnej składowej C i usuwamy z niego wszystkie łuki. 
@@ -242,18 +243,28 @@ Otrzymujemy wówczas poniższy graf:
   \includegraphics[width=\textwidth,keepaspectratio]{Graph4.png}
 \end{figure}
 		 
-Jest to graf pełny, nad łukami zaznaczono ich koszty. Ponieważ najniższym kosztem jest $MIN=4$, oznacza to, że nie istnieje już żadne bezpośrednie połączenie, musimy połączyć te sekwencje "grubymi nićmi" aby utworzyć sekwencję końcową:
+Jest to graf pełny, nad łukami zaznaczono ich koszty. Ponieważ najniższym kosztem jest $MIN=4$, oznacza to, że nie istnieje już 
+żadne bezpośrednie połączenie, musimy połączyć te sekwencje "grubymi nićmi" aby utworzyć sekwencję końcową:
 $AGCTGTGACTGT$
 Zauważmy, że jest ona dłuższa, niż $n=10$. W związku z tym sekwencję wynikową przycinamy do długości odpowiadającej spodziewanemu wynikowi otrzymując w rezultacie:
 $AGCTGTGACT$.
 
 Algorytm zakończył swoje działanie. Zupełnie przypadkowo uzyskana sekwencja zgadza się z sekwencją wyjściową, mimo tego, że w ostatnim kroku algorytmu zostały sklejone słowa w sposób niekorzystny.
-Należy zauważyć, że znaczny wpływ na działanie algorytmu ma sposób wyboru wierzchołka w silnie spójnej składowej grafu z którego zostaną usunięte łuki, a także kolejność występowania wierzchołków w silnie spójnych składowych grafu. Jeśli na początku zamiast usuwać łuk z wierzchołka $TGT$ usunęlibyśmy dowolny inny łuk z tej silnie spójnej składowej grafu, to dalsze iteracje miałyby inny przebieg.
+Należy zauważyć, że znaczny wpływ na działanie algorytmu ma sposób wyboru wierzchołka w silnie spójnej składowej grafu z
+którego zostaną usunięte łuki, a także kolejność występowania wierzchołków w silnie spójnych składowych grafu. Jeśli na 
+początku zamiast usuwać łuk z wierzchołka $TGT$ usunęlibyśmy dowolny inny łuk z tej silnie spójnej składowej grafu, to dalsze iteracje miałyby inny przebieg.
 
 \section{SBH dla błędów negatywnych}
-W algorytmie dla błędów pozytywnych korzystaliśmy z funkcji odległości dwóch łańcuchów tekstowych względem siebie. Było to możliwe dzięki temu, że porównywane łańcuchy miały tą samą długość. W przypadku algorytmu ogólnego, w którym również wykorzystujemy pojęcie odległości do konstrukcji łuków wkrada się pewna nieścisłość. Otóż porównywane są łańcuchy o różnych długościach. Jeśli więc mamy dwa łańcuchy S1=$AAAAAAA$ (długości 7 znaków) oraz S2=$GGGGGGGGAAA$ (długości 11 znaków), to zostanie utworzony łuk od S1 do S2 o koszcie 7, a w drugą stronę od S2 do S1 o koszcie 8. Zgodnie z algorytmem ogólnym uwzględniony zostanie łuk o niższym koszcie jako lepszy. Jak widać jest to złudne wrażenie, ponieważ łącząc elementy przy pomocy drugiego łuku aż trzy znaki pokryją się ze sobą, co oznacza, że będzie to de facto lepsze połączenie, bo utworzy krótszą sekwencję.
+W algorytmie dla błędów pozytywnych korzystaliśmy z funkcji odległości dwóch łańcuchów tekstowych względem siebie. Było 
+to możliwe dzięki temu, że porównywane łańcuchy miały tą samą długość. W przypadku algorytmu ogólnego, w którym również 
+wykorzystujemy pojęcie odległości do konstrukcji łuków wkrada się pewna nieścisłość. Otóż porównywane są łańcuchy o 
+różnych długościach. Jeśli więc mamy dwa łańcuchy $S_1$=$AAAAAAA$ (długości 7 znaków) oraz $S_2$=$GGGGGGGGAAA$ (długości 11 znaków), 
+to zostanie utworzony łuk od $S_1$ do $S_2$ o koszcie 7, a w drugą stronę od $S_2$ do $S_1$ o koszcie 8. Zgodnie z algorytmem 
+ogólnym uwzględniony zostanie łuk o niższym koszcie jako lepszy. Jak widać jest to złudne wrażenie, ponieważ łącząc elementy 
+przy pomocy drugiego łuku aż trzy znaki pokryją się ze sobą, co oznacza, że będzie to de facto lepsze połączenie, bo utworzy krótszą sekwencję.
 
-Z powyższej obserwacji wynika, że należy zmodyfikować funkcję nadawania wartości łukom, aby uwzględniać relatywną liczbę powtarzających się znaków. W ten sposób tworzymy algorytm, który radzi sobie lepiej z instancjami zawierającymi błędy negatywne. Pogrubione zostały fragmenty, które uległy modyfikacji.
+Z powyższej obserwacji wynika, że należy zmodyfikować funkcję nadawania wartości łukom, aby uwzględniać relatywną 
+liczbę powtarzających się znaków. W ten sposób tworzymy algorytm, który radzi sobie lepiej z instancjami zawierającymi błędy negatywne. Pogrubione zostały fragmenty, które uległy modyfikacji.
 
 Algorytm 4
 \begin{enumerate}
@@ -274,54 +285,84 @@ Powyższy algorytm posiada identyczną złożoność jak algorytm ogólny, dzia�
 
 \section{Wyniki}
 
-Wszystkie poniższe wykresy i porównania zostały wygenerowane na zbiorze instancji testowych. Należy przy tym zauważyć, że instancje z błędami pozytywnymi charakteryzują się tym, że można w nich wyróżnić jeden długi łańcuch, do którego czasem dochodzą lub wychodzą pojedyncze rozgałęzienia, tworząc czasem cykl. W przypadku instancji z błędami negatywnymi możemy wyróżnić kilka długich łańcuchów, które najczęściej są w prosty sposób rozgałęzione. Zauważmy, że to, że dany łańcuch można idealnie "skleić" w całość nie oznacza, że jest to optymalne sklejenie. Może się bowiem tak zdarzyć, że brakujące słowa tworzyły cykl w grafie połączeń, co oczywiście zwiększa możliwość różnych kombinacji sekwencji z takiego łańcucha (inne symbole byłyby na początku i na końcu utworzonej sekwencji, przez co mogło istnieć lepsze dopasowanie z pozostałymi słowami).
+Wszystkie poniższe wykresy i porównania zostały wygenerowane na zbiorze instancji testowych. Należy przy tym zauważyć, 
+że instancje z błędami pozytywnymi charakteryzują się tym, że można w nich wyróżnić jeden długi łańcuch, do którego 
+czasem dochodzą lub wychodzą pojedyncze rozgałęzienia, tworząc czasem cykl. W przypadku instancji z błędami negatywnymi 
+możemy wyróżnić kilka długich łańcuchów, które najczęściej są w prosty sposób rozgałęzione. Zauważmy, że to, że dany 
+łańcuch można idealnie "skleić" w całość nie oznacza, że jest to optymalne sklejenie. Może się bowiem tak zdarzyć, 
+że brakujące słowa tworzyły cykl w grafie połączeń, co oczywiście zwiększa możliwość różnych kombinacji sekwencji z 
+takiego łańcucha (inne symbole byłyby na początku i na końcu utworzonej sekwencji, przez co mogło istnieć lepsze dopasowanie z pozostałymi słowami).
 
-\subsection{Heurystka ogólna}
+\subsection{Heurystyka ogólna}
 
-Algorytm ogólny został przetestowany zarówno na zbiorze instancji z błędami negatywnymi jak i zbiorze instancji z błędami pozytywnymi. Jako interesujące nas statystyki uwzględniliśmy procent wykorzystania słów znajdujących się w spektrum oraz liczbę popełnionych błędów (dodanych słów). Ponieważ dla danej liczy słów w spektrum istniało czasem po kilka instancji, dla takich przypadków uwzględnialiśmy wartość średnią interesującego nas parametru.
+Algorytm ogólny został przetestowany zarówno na zbiorze instancji z błędami negatywnymi jak i zbiorze instancji z błędami pozytywnymi. 
+Jako interesujące nas statystyki uwzględniliśmy procent wykorzystania słów znajdujących się w spektrum oraz liczbę popełnionych błędów 
+(dodanych słów). Ponieważ dla danej liczy słów w spektrum istniało czasem po kilka instancji, dla takich przypadków uwzględnialiśmy wartość średnią interesującego nas parametru.
 
 \begin{figure}[h]
   \footnotesize\centering
   \includegraphics[width=\textwidth,keepaspectratio]{percentageUsedWords_general_positive.png}
 \end{figure}
 
-Jak widać na powyższym wykresie algorytm ten radzi sobie z błędami pozytywnymi bez problemów, dając za każdym razem wynik dokładny. Wynika to z charakterystyki tego typu instancji - zawsze można wyróżnić "główną ścieżkę" sekwencji, która musi stanowić po prostu rozwiązanie, a nasz algorytm takiej ścieżki właśnie szuka.
+Jak widać na powyższym wykresie algorytm ten radzi sobie z błędami pozytywnymi bez problemów, dając za każdym razem wynik dokładny. 
+Wynika to z charakterystyki tego typu instancji - zawsze można wyróżnić "główną ścieżkę" sekwencji, która musi stanowić po prostu rozwiązanie, a nasz algorytm takiej ścieżki właśnie szuka.
 
 \begin{figure}[h]
   \footnotesize\centering
   \includegraphics[width=\textwidth,keepaspectratio]{percentageUsedWords_general_negative.png}
 \end{figure}
 
-W przypadku instancji z błędami negatywnymi jest już nieco gorzej. W teorii wszystkie słowa wchodzące w skład spektrum powinny zostać wykorzystane. Nasz algorytm jest algorytmem zachłannym - skleja najkorzystniejsze w danej chwili dla niego sekwencji. Mając na uwadze to, że instancje składają się z prostych lasów grafowych, które w większości zawierają po prostu łańcuchy lub proste grafy, w pierwszym kroku następuje właśnie sklejenie tych łańcuchów. Gdyby nie ograniczenie na długość sekwencji wyjściowej, algorytm wykorzystywałby wszystkie słowa z instancji. Poniżej znajduje się wykres z długościami wyjściowych sekwencji jeśli pominiemy ograniczenie nałożone na długość sekwencji w zestawieniu z liczbą niewykorzystanych słów przez wersję algorytmu z tym ograniczeniem.
+W przypadku instancji z błędami negatywnymi jest już nieco gorzej. W teorii wszystkie słowa wchodzące w skład spektrum powinny 
+zostać wykorzystane. Nasz algorytm jest algorytmem zachłannym - skleja najkorzystniejsze w danej chwili dla niego sekwencji. 
+Mając na uwadze to, że instancje składają się z prostych lasów grafowych, które w większości zawierają po prostu łańcuchy lub 
+proste grafy, w pierwszym kroku następuje właśnie sklejenie tych łańcuchów. Gdyby nie ograniczenie na długość sekwencji wyjściowej, 
+algorytm wykorzystywałby wszystkie słowa z instancji. Poniżej znajduje się wykres z długościami wyjściowych sekwencji jeśli pominiemy 
+ograniczenie nałożone na długość sekwencji w zestawieniu z liczbą niewykorzystanych słów przez wersję algorytmu z tym ograniczeniem.
 
 \begin{figure}[h]
   \footnotesize\centering
   \includegraphics[width=\textwidth,keepaspectratio]{withoutNConstraint_general_negative.png}
 \end{figure}
 
-Wydaje się, że różnica jest dość uzasadniona - wersja algorytmu pilnująca długości sekwencji obcina po prostu w ostatnim kroku jedną z sekwencji o nadmiar znaków. Ten nadmiar znakowy przesunięty może być maksymalnie o 9 znaków (dla słów długości 10), więc ilość niewykorzystanych słów powinna być mniejsza o conajwyżej 9 względem odchylenia długości sekwencji od długości oczekiwanej w wersji algorytmu bez ograniczenia. I tak też się dzieje. Widać ponadto, że przy dużych wypełnieniach spektrum (ponad 90\%) ta różnica wynosi 0 - ostatnie "doklejenie" odbywa się po prostu na łukach o wartości równej licznie nadmiarowych znaków w przypadku gdybyśmy nie posiadali ograniczenia na długość sekwencji . Dla przykładu jeśli doklejamy $TACGT$ z przesunięciem dwa do $GCTA$, i odcinamy nadmiar znaków równy 2, to w efekcie mamy sekwencję $GCTAC$. Odcięliśmy dwa znaki, z których mielibyśmy słowa $ACG$ oraz $CGT$.
+Wydaje się, że różnica jest dość uzasadniona - wersja algorytmu pilnująca długości sekwencji obcina po prostu w ostatnim kroku 
+jedną z sekwencji o nadmiar znaków. Ten nadmiar znakowy przesunięty może być maksymalnie o 9 znaków (dla słów długości 10), 
+więc ilość niewykorzystanych słów powinna być mniejsza o co najwyżej 9 względem odchylenia długości sekwencji od długości 
+oczekiwanej w wersji algorytmu bez ograniczenia. I tak też się dzieje. Widać ponadto, że przy dużych wypełnieniach spektrum 
+(ponad 90\%) ta różnica wynosi 0 - ostatnie "doklejenie" odbywa się po prostu na łukach o wartości równej licznie nadmiarowych 
+znaków w przypadku gdybyśmy nie posiadali ograniczenia na długość sekwencji . Dla przykładu jeśli doklejamy $TACGT$ z przesunięciem 
+dwa do $GCTA$, i odcinamy nadmiar znaków równy 2, to w efekcie mamy sekwencję $GCTAC$. Odcięliśmy dwa znaki, z których mielibyśmy słowa $ACG$ oraz $CGT$.
 
 \begin{figure}[h]
   \footnotesize\centering
   \includegraphics[width=\textwidth,keepaspectratio]{unusedWords_general_negative.png}
 \end{figure}
 
-Na wykresie obrazującym liczbę niewykorzystanych słów z instancji dla poszczególnych wielkości instancji widać, że nie są to duże braki. Zaznaczona na czarno linia trendu pokazuje, że średnio 12-13 słów jest niewykorzystanych, co daje dość dużą skuteczność algorytmu (ponad 90\% jak wcześniej pokazano).
+Na wykresie obrazującym liczbę niewykorzystanych słów z instancji dla poszczególnych wielkości instancji widać, że nie są to duże braki. 
+Zaznaczona na czarno linia trendu pokazuje, że średnio 12-13 słów jest niewykorzystanych, co daje dość dużą skuteczność algorytmu (ponad 90\% jak wcześniej pokazano).
 
 \subsection{Heurystyka - błędy pozytywne}
 
-Algorytm specyficzny dla problemów z błędami pozytywnymi jest tak naprawdę szczególnym przypadkiem algorytmu ogólnego. Różnica polega na tym, że algorytm ten nie uwzględnia w ogóle łuków o kosztach wyższych niż jeden. Wynika to z obserwacji, że w instancji z błędami pozytywnymi (a więc z nadmiarem słów) musi istnieć ścieżka oparta o łuki o koszcie 1, która zawiera dokładnie $n$ wierzchołków. Algorytm ten poszukuje właśnie takiej ścieżki. Zauważmy, że wykres procentowego wykorzystania słów z instancji dla Algorytmu 2 wygląda identycznie jak analogiczny wykres dla Algorytmu 3. Jedynym sensownym porównaniem wydaje się być porównanie czasowe, które przedstawiamy w punkcie porównującym te algorytmy.
+Algorytm specyficzny dla problemów z błędami pozytywnymi jest tak naprawdę szczególnym przypadkiem algorytmu ogólnego.
+Różnica polega na tym, że algorytm ten nie uwzględnia w ogóle łuków o kosztach wyższych niż jeden. Wynika to z obserwacji, 
+że w instancji z błędami pozytywnymi (a więc z nadmiarem słów) musi istnieć ścieżka oparta o łuki o koszcie 1, która 
+zawiera dokładnie $n$ wierzchołków. Algorytm ten poszukuje właśnie takiej ścieżki. Zauważmy, że wykres procentowego 
+wykorzystania słów z instancji dla Algorytmu 2 wygląda identycznie jak analogiczny wykres dla Algorytmu 3. Jedynym 
+sensownym porównaniem wydaje się być porównanie czasowe, które przedstawiamy w punkcie porównującym te algorytmy.
 
 \subsection{Heurystyka - błędy negatywne}
 
-Algorytm specyficzny dla problemów z błędami negatywnymi jest zmodyfikowaną wersją algorytmu ogólnego. Różnią się one metodą wyznaczania wartości kosztów na łukach oraz rodzajem łuków najbardziej porządanych w rozwiązaniu (Algorytm 3 szuka najmniejszego kosztu, Algorytm 4 szuka największego zysku). Mimo tak niewielkiej zmiany możemy zaobserwować na poniższym wykresie znaczny wzrost skuteczności algorytmu w wykorzystywaniu słów tworzących daną instancję.
+Algorytm specyficzny dla problemów z błędami negatywnymi jest zmodyfikowaną wersją algorytmu ogólnego. Różnią się one
+metodą wyznaczania wartości kosztów na łukach oraz rodzajem łuków najbardziej pożądanych w rozwiązaniu (Algorytm 3 szuka 
+najmniejszego kosztu, Algorytm 4 szuka największego zysku). Mimo tak niewielkiej zmiany możemy zaobserwować na poniższym 
+wykresie znaczny wzrost skuteczności algorytmu w wykorzystywaniu słów tworzących daną instancję.
 
 \begin{figure}[h]
   \footnotesize\centering
   \includegraphics[width=\textwidth,keepaspectratio]{percentageUsedWords_negative.png}
 \end{figure}
 
-Siłą rzeczy algorytm ten popełnia mało błędów. Jako błąd traktuje się niewykorzystanie słowa z instancji. W większości przypadków pomijane są góra 2 słowa. Jedynie dla instancji niemalże bezbłędnych, w których brakuje mniej niż 10 słów algorytm ma mniejsze pole do popisu i zostawia większą liczbę słów.
+Siłą rzeczy algorytm ten popełnia mało błędów. Jako błąd traktuje się niewykorzystanie słowa z instancji. W większości 
+przypadków pomijane są góra 2 słowa. Jedynie dla instancji niemalże bezbłędnych, w których brakuje mniej niż 10 słów algorytm ma mniejsze pole do popisu i zostawia większą liczbę słów.
 
 \begin{figure}[h]
   \footnotesize\centering
@@ -335,8 +376,12 @@ Siłą rzeczy algorytm ten popełnia mało błędów. Jako błąd traktuje się 
   \includegraphics[width=\textwidth,keepaspectratio]{timeDiff_general_vs_positive.png}
 \end{figure}
 
-Jak widać na poniższym wykresie istnieje minimalna różnica czasowa w działaniu tych dwóch algorytmów. Przypadek okrojony działa o tysięczne sekundy szybciej, ponieważ nie ma narzutu na sprawdzanie warunku stopu oraz nie są tworzone kilkukrotnie sekwencję z dotychczasowych rozwiązań. Jednak w związku z tak niewielkimi różnicami można powiedzieć, że algorytmy te są porównywalne dla zbioru instancji z błędami pozytywnymi.
-Gdybyśmy uruchomili algorytm dla instancji z błędami negatywnymi otrzymalibyśmy mierny wynik, ponieważ zostałby uwzględniony tylko jeden graf wchodzący w skład lasu grafów który jest badaną instancją.
+Jak widać na poniższym wykresie istnieje minimalna różnica czasowa w działaniu tych dwóch algorytmów. 
+Przypadek okrojony działa o tysięczne sekundy szybciej, ponieważ nie ma narzutu na sprawdzanie warunku 
+stopu oraz nie są tworzone kilkukrotnie sekwencję z dotychczasowych rozwiązań. Jednak w związku z tak 
+niewielkimi różnicami można powiedzieć, że algorytmy te są porównywalne dla zbioru instancji z błędami pozytywnymi.
+Gdybyśmy uruchomili algorytm dla instancji z błędami negatywnymi otrzymalibyśmy mierny wynik, ponieważ zostałby 
+uwzględniony tylko jeden graf wchodzący w skład lasu grafów który jest badaną instancją.
 
 \subsection{Porównanie ogólnego i dla błędów negatywnych}
 
@@ -345,6 +390,10 @@ Gdybyśmy uruchomili algorytm dla instancji z błędami negatywnymi otrzymaliby�
   \includegraphics[width=\textwidth,keepaspectratio]{percentageUsedWords_general_vs_negative.png}
 \end{figure}
 
-Porównując z kolei algorytm dla błędów negatywnych względem algorytmu ogólnego od razu widzimy, że ten pierwszy jest lepszy - wykorzystuje bowiem średnio $98,97\%$ słów zadanej instancji! Jednak można zauważyć, że choć tak niewielka różnica w działaniu algorytmu ma wpływ dla instancji z dużą ilością brakujących słów, o tyle dla instancji w których brakuje mniej niż 20 słów wyniki są identyczne. Wynika to z tego, że główny "silnik" sklejania sekwencji jest w zasadzie identyczny, tj szuka najdłuższego możliwego łańcucha oligonukleotydów.
+Porównując z kolei algorytm dla błędów negatywnych względem algorytmu ogólnego od razu widzimy, że ten 
+pierwszy jest lepszy - wykorzystuje bowiem średnio $98,97\%$ słów zadanej instancji! Jednak można zauważyć,
+że choć tak niewielka różnica w działaniu algorytmu ma wpływ dla instancji z dużą ilością brakujących słów, 
+o tyle dla instancji w których brakuje mniej niż 20 słów wyniki są identyczne. Wynika to z tego, że główny 
+"silnik" sklejania sekwencji jest w zasadzie identyczny, tj szuka najdłuższego możliwego łańcucha oligonukleotydów.
 
 \end{document}
